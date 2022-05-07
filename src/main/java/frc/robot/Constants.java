@@ -73,6 +73,26 @@ public final class Constants {
         public static final double kF = 0.0639;
     }
 
+    public static final class Turret {
+        public static final int MOTOR_ID = 22;
+
+        public static final double kP = .25;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kF = 0;
+
+        public static final int ENCODER_COUNTS_PER_REV = 42;
+        public static final int GEAR_RATIO = 1; // TODO: CHANGE THIS TO ACTUAL GEAR RATIO
+
+        public static final double CLIMBER_POLE_DEADZONE_CENTER = 45;
+        public static final double CLIMBER_POLE_DEADZONE_WIDTH = 8;
+
+        // Maximum front angle the turret can turn to with climber arms up.
+        // Not used yet, will be using turret only if arms are down currently.
+        public static final double CLIMBER_ARM_LEFT_ANGLE = 2;
+        public static final double CLIMBER_ARM_RIGHT_ANGLE = 2;
+    }
+
     public static final class Climber {
         public static final int LEFT_MOTOR_ID = 14;
         public static final int RIGHT_MOTOR_ID = 15;

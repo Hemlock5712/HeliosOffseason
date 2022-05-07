@@ -5,13 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.FieldDrive;
 import frc.robot.commands.MagazineAutoBump;
+import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.TwoBallMiddle;
 import frc.robot.commands.autonomous.util.AutoBaseCommand;
 import frc.robot.subsystems.Drivetrain;
@@ -20,6 +20,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -39,6 +40,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
+  private final Turret turret = new Turret();
 
   private final SendableChooser<AutoBaseCommand> m_chooser = new SendableChooser<>();
 
@@ -52,7 +54,12 @@ public class RobotContainer {
   }
 
   private void configureAutonomous() {
-    m_chooser.addOption("2 Ball Middle", new TwoBallMiddle(drivetrain, shooter, intake, magazine, limelight));
+    m_chooser.addOption("System Check",
+        new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight, turret));
+
+    m_chooser.setDefaultOption("2 Ball Middle",
+        new TwoBallMiddle(drivetrain, shooter, intake, magazine, climber, limelight, turret));
+
     SmartDashboard.putData(m_chooser);
   }
 
@@ -71,8 +78,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     XboxController primary_joystick = new XboxController(0);
-    XboxController operator_joystick = new XboxController(1);
-    XboxController climber_joystick = new XboxController(2);
+    // XboxController operator_joystick = new XboxController(1);
+    // XboxController climber_joystick = new XboxController(2);
 
     // Default commands
     magazine.setDefaultCommand(new MagazineAutoBump(magazine));

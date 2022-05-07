@@ -26,11 +26,17 @@ public class Shooter extends SubsystemBase {
   SparkMaxLimitSwitch backLimitSwitch = hood.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   SparkMaxLimitSwitch frontLimitSwitch = hood.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
+  double hoodAngleTarget = 0;
+
   public Shooter() {
     leftShooter.setNeutralMode(NeutralMode.Brake);
     rightShooter.setNeutralMode(NeutralMode.Brake);
 
     hood.setIdleMode(IdleMode.kBrake);
+    hood.setInverted(true);
+
+    hood.getPIDController().setP(0.5);
+    hood.getPIDController().setIZone(0.2);
 
     rightShooter.setInverted(true);
     rightShooter.follow(leftShooter, FollowerType.AuxOutput1);
@@ -61,14 +67,22 @@ public class Shooter extends SubsystemBase {
 
   public void setHoodAngle(double angle) {
     hood.getPIDController().setReference(angle, ControlType.kPosition);
+    hoodAngleTarget = angle;
+  }
+
+  public void setHoodSpeed(double speed) {
+    hood.set(-0.3);
+  }
+
+  public boolean isHoodBackSwitchTriggered() {
+    return backLimitSwitch.isPressed();
+  }
+
+  public boolean isHoodAtAngle() {
+    return Math.abs(hoodEncoder.getPosition() - hoodAngleTarget) < 0.2;
   }
 
   public void zeroHoodEncoder() {
     hoodEncoder.setPosition(0);
-  }
-
-  @Override
-  public void periodic() {
-
   }
 }
