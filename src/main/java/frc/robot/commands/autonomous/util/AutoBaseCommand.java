@@ -12,6 +12,11 @@ import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
+/**
+ * Provides a base command structure for autonomous commands.
+ * Requires all of the components, as well as setting up path
+ * generation PID and generate methods.
+ */
 public abstract class AutoBaseCommand extends SequentialCommandGroup {
 
   protected Drivetrain drivetrain;
@@ -40,12 +45,24 @@ public abstract class AutoBaseCommand extends SequentialCommandGroup {
     generate();
   }
 
+  /**
+   * Whether the paths have been generated
+   * @return Has path been generated
+   */
   public boolean hasBeenGenerated() {
     return pathHasBeenGenerated;
   }
 
+  /**
+   * Load and generate trajectories in this method. It is automatically called
+   * upon creation of the command.
+   */
   protected abstract void generatePaths();
 
+  /**
+   * Generate the paths for the autonomous routine. If they have already
+   * been generated, skip as to not cause delays.
+   */
   public final void generate() {
     if (!pathHasBeenGenerated) {
       generatePaths();

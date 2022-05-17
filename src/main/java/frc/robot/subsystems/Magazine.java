@@ -62,7 +62,10 @@ public class Magazine extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("UPPER_MAG", ballInUpper());
-    SmartDashboard.putBoolean("LOWER_MAG", ballInLower());
+    SmartDashboard.putBoolean("Magazine/BallInUpper", ballInUpper());
+    SmartDashboard.putBoolean("Magazine/BallInLower", ballInLower());
+    SmartDashboard.putNumber("Magazine/LowerSpeed", lowerMagazine.get());
+    SmartDashboard.putNumber("Magazine/UpperSpeed", upperMagazine.get());
+    SmartDashboard.putData(this);
   }
 }

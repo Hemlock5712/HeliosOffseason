@@ -4,11 +4,17 @@
 
 package frc.robot;
 
+import java.util.Map;
+import static java.util.Map.entry;
+import java.util.TreeMap;
+
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import frc.robot.util.SwerveConstants;
 
 /**
@@ -82,7 +88,7 @@ public final class Constants {
         public static final double kF = 0;
 
         public static final int ENCODER_COUNTS_PER_REV = 42;
-        public static final int GEAR_RATIO = 1; // TODO: CHANGE THIS TO ACTUAL GEAR RATIO
+        public static final int GEAR_RATIO = 4; // TODO: CHANGE THIS TO ACTUAL GEAR RATIO
 
         public static final double CLIMBER_POLE_DEADZONE_CENTER = 45;
         public static final double CLIMBER_POLE_DEADZONE_WIDTH = 8;
@@ -91,6 +97,16 @@ public final class Constants {
         // Not used yet, will be using turret only if arms are down currently.
         public static final double CLIMBER_ARM_LEFT_ANGLE = 2;
         public static final double CLIMBER_ARM_RIGHT_ANGLE = 2;
+
+        public static final TreeMap<Double, Double> TIME_OF_FLIGHT = new TreeMap<>(
+                Map.ofEntries(
+                        entry(2.5, 1.0),
+                        entry(3.0, 1.05),
+                        entry(3.5, 1.10),
+                        entry(4.0, 1.15),
+                        entry(4.5, 1.32),
+                        entry(5.0, 1.4),
+                        entry(5.5, 1.52)));
     }
 
     public static final class Climber {
@@ -116,6 +132,18 @@ public final class Constants {
         public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(-3, 0, 0, // .85 works
                 ROT_PROFILE);
 
+    }
+
+    public static final class Field {
+
+        public static final Translation2d HUB_LOCATION = new Translation2d(Units.inchesToMeters(324),
+                Units.inchesToMeters(162));
+
+        public static final Translation2d FIELD_SIZE = new Translation2d(Units.inchesToMeters(648),
+                Units.inchesToMeters(324));
+
+        public static final double LOW_RUNG_HEIGHT = Units.inchesToMeters(48.75);
+        public static final double MID_RUNG_HEIGHT = Units.inchesToMeters(60.25);
     }
 
 }

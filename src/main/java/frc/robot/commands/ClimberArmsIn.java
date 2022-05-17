@@ -18,6 +18,7 @@ public class ClimberArmsIn extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(() -> turret.setTurretCanRotatePastArms(false)),
                 new TurretAngleSet(turret, () -> 0), // Will only finish once the angle is within a threshold
+                // TODO: Make this 180 during endgame so we can shoot from the bar
                 new ArmsIn(climber));
     }
 }

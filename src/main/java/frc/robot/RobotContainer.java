@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.FieldDrive;
-import frc.robot.commands.MagazineAutoBump;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commands.*;
 import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.TwoBallMiddle;
 import frc.robot.commands.autonomous.util.AutoBaseCommand;
@@ -40,7 +40,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
-  private final Turret turret = new Turret();
+  private final Turret turret = new Turret(drivetrain);
 
   private final SendableChooser<AutoBaseCommand> m_chooser = new SendableChooser<>();
 
@@ -78,13 +78,60 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     XboxController primary_joystick = new XboxController(0);
-    // XboxController operator_joystick = new XboxController(1);
+    XboxController operator_joystick = new XboxController(1);
     // XboxController climber_joystick = new XboxController(2);
 
     // Default commands
     magazine.setDefaultCommand(new MagazineAutoBump(magazine));
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> modifyAxis(primary_joystick.getLeftY()),
         () -> modifyAxis(primary_joystick.getLeftX()), () -> modifyAxis(primary_joystick.getRightX())));
+    turret.setDefaultCommand(new TurretTrackTower(turret));
+    shooter.setDefaultCommand(new ResetHoodAngle(shooter));
+
+    /*
+     * Primary Driver Commands
+     */
+    // Calibrate gyroscope
+    new Button(primary_joystick::getAButton).whenPressed(
+            drivetrain::calibrateGyroscope
+    );
+
+    // Intake
+    new Button(primary_joystick::getRightBumper).whenHeld(
+            new IntakeCargo(intake, magazine)
+    );
+
+    // Reverse intake
+    new Button(primary_joystick::getLeftBumper).whenHeld(
+            new MagazineSpitCargo(magazine)
+    );
+
+    /*
+     * Operator Commands
+     */
+    // Shoot using limelight
+    new Button(operator_joystick::getRightBumper).whenHeld(
+            new LimelightShoot(shooter, magazine, limelight)
+    );
+    // Raise climber to top of bar
+    new Button(operator_joystick::getAButton).whenPressed(
+            new ClimberAboveBar(climber)
+    );
+
+    // Drop climber to bottom
+    new Button(operator_joystick::getYButton).whenPressed(
+            new ClimberToBottom(climber)
+    );
+
+    // Retract climber arms, also locks turret to forward position
+    new Button(operator_joystick::getBButton).whenPressed(
+            new ClimberArmsIn(climber, turret)
+    );
+
+    // Extend climber arms, allows free rotation of turret
+    new Button(operator_joystick::getXButton).whenPressed(
+            new ClimberArmsOut(climber, turret)
+    );
   }
 
   private double deadband(double value, double deadband) {

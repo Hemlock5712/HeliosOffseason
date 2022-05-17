@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -51,6 +52,7 @@ public class Shooter extends SubsystemBase {
     rightShooter.config_kD(0, Constants.Shooter.kD, 30);
     rightShooter.config_kF(0, Constants.Shooter.kF, 30);
     rightShooter.config_IntegralZone(0, 50);
+
   }
 
   public double getShooterError() {
@@ -84,5 +86,13 @@ public class Shooter extends SubsystemBase {
 
   public void zeroHoodEncoder() {
     hoodEncoder.setPosition(0);
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Shooter/HoodAngle", getHoodPosition());
+    SmartDashboard.putNumber("Shooter/SpeedError", leftShooter.getClosedLoopError());
+    SmartDashboard.putNumber("Shooter/HoodSpeed", hood.get());
+    SmartDashboard.putData(this);
   }
 }

@@ -7,6 +7,10 @@ package frc.robot.commands.util;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 
+/**
+ * Pull the climber arms in.
+ * <b>THIS IS UNSAFE FOR NORMAL USAGE, IT DOESN'T ACCOUNT FOR THE TURRET</b>
+ */
 public class ArmsIn extends CommandBase {
 
   Climber m_climber;

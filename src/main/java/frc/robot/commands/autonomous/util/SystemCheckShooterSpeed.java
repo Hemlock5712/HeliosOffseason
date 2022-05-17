@@ -15,6 +15,8 @@ public class SystemCheckShooterSpeed extends CommandBase {
         m_shooter = shooter;
         m_speed = speed;
 
+        addRequirements(shooter);
+
     }
 
     @Override

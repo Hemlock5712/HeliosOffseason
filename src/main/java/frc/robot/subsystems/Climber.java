@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
 
@@ -72,5 +73,11 @@ public class Climber extends PIDSubsystem {
 
   public boolean areArmsDown() {
     return armsOut;
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putData(this);
+    SmartDashboard.putBoolean("Climber/ArmsOut", armsOut);
   }
 }

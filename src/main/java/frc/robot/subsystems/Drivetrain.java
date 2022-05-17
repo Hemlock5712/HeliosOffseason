@@ -28,7 +28,9 @@ public class Drivetrain extends SubsystemBase {
       new Translation2d(-Constants.Drivetrain.TRACKWIDTH_METERS / 2.0, -Constants.Drivetrain.WHEELBASE_METERS / 2.0));
 
   private final Pigeon2 m_pigeon = new Pigeon2(Constants.Drivetrain.PIGEON_ID);
-  private SwerveDriveOdometry m_odemetry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(0));
+
+  private double gyroOffset = 0;
+  private final SwerveDriveOdometry m_odemetry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(0));
 
   private final SwerveModule m_frontLeftModule;
   private final SwerveModule m_frontRightModule;
@@ -71,8 +73,18 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("Field", m_field);
   }
 
+  /**
+   * Fully resets the gyroscope angle. You probably want calibrateGyroscope() instead.
+   */
   public void zeroGyroscope() {
     m_pigeon.setYaw(0.0);
+  }
+
+  /**
+   *
+   */
+  public void calibrateGyroscope() {
+    gyroOffset = -m_pigeon.getYaw();
   }
 
   public void setGyroscope(double angle) {
@@ -80,7 +92,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Rotation2d getGyroscopeRotation() {
-    return Rotation2d.fromDegrees(m_pigeon.getYaw());
+    return Rotation2d.fromDegrees(m_pigeon.getYaw() + gyroOffset);
   }
 
   public SwerveModuleState getState(SwerveModule module) {
@@ -114,6 +126,11 @@ public class Drivetrain extends SubsystemBase {
     return m_kinematics;
   }
 
+  public ChassisSpeeds getFieldRelativeSpeeds() {
+    return m_kinematics.toChassisSpeeds(getState(m_frontLeftModule), getState(m_frontRightModule),
+        getState(m_backRightModule), getState(m_backLeftModule));
+  }
+
   public void resetOdometry(Pose2d resetPos) {
     m_odemetry.resetPosition(resetPos, resetPos.getRotation());
   }
@@ -136,6 +153,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     m_odemetry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule),
         getState(m_backLeftModule), getState(m_backRightModule));
+    SmartDashboard.putData(this);
   }
 
   @Override
