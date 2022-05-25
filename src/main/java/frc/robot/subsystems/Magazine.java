@@ -13,10 +13,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Magazine extends SubsystemBase {
+public class Magazine extends SubsystemBase implements AutoCloseable {
 
-  CANSparkMax lowerMagazine = new CANSparkMax(Constants.Magazine.LOWER_MOTOR, MotorType.kBrushless);
-  CANSparkMax upperMagazine = new CANSparkMax(Constants.Magazine.UPPER_MOTOR, MotorType.kBrushless);
+  public CANSparkMax lowerMagazine = new CANSparkMax(Constants.Magazine.LOWER_MOTOR, MotorType.kBrushless);
+  public CANSparkMax upperMagazine = new CANSparkMax(Constants.Magazine.UPPER_MOTOR, MotorType.kBrushless);
 
   AnalogInput lowerBallSensor = new AnalogInput(Constants.Magazine.LOWER_SENSOR);
   AnalogInput upperBallSensor = new AnalogInput(Constants.Magazine.UPPER_SENSOR);
@@ -67,5 +67,13 @@ public class Magazine extends SubsystemBase {
     SmartDashboard.putNumber("Magazine/LowerSpeed", lowerMagazine.get());
     SmartDashboard.putNumber("Magazine/UpperSpeed", upperMagazine.get());
     SmartDashboard.putData(this);
+  }
+
+  @Override
+  public void close() throws Exception {
+    lowerMagazine.close();
+    upperMagazine.close();
+    lowerBallSensor.close();
+    upperBallSensor.close();
   }
 }

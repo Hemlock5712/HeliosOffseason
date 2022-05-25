@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements AutoCloseable {
   private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
       new Translation2d(Constants.Drivetrain.TRACKWIDTH_METERS / 2.0, Constants.Drivetrain.WHEELBASE_METERS / 2.0),
       new Translation2d(Constants.Drivetrain.TRACKWIDTH_METERS / 2.0, -Constants.Drivetrain.WHEELBASE_METERS / 2.0),
@@ -159,5 +159,10 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     m_field.setRobotPose(m_odemetry.getPoseMeters());
+  }
+
+  @Override
+  public void close() throws Exception {
+
   }
 }

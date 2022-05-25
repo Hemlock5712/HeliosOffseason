@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Shooter extends SubsystemBase {
+public class Shooter extends SubsystemBase implements AutoCloseable {
   TalonFX leftShooter = new TalonFX(Constants.Shooter.LEFT_MOTOR_ID);
   TalonFX rightShooter = new TalonFX(Constants.Shooter.RIGHT_MOTOR_ID);
   CANSparkMax hood = new CANSparkMax(Constants.Shooter.HOOD_MOTOR_ID, MotorType.kBrushless);
@@ -94,5 +94,10 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter/SpeedError", leftShooter.getClosedLoopError());
     SmartDashboard.putNumber("Shooter/HoodSpeed", hood.get());
     SmartDashboard.putData(this);
+  }
+
+  @Override
+  public void close() throws Exception {
+    hood.close();
   }
 }

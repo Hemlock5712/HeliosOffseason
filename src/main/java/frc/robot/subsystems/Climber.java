@@ -15,10 +15,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
 
-public class Climber extends PIDSubsystem {
+public class Climber extends PIDSubsystem implements AutoCloseable {
 
-  TalonFX leftMotor = new TalonFX(Constants.Climber.LEFT_MOTOR_ID);
-  TalonFX rightMotor = new TalonFX(Constants.Climber.RIGHT_MOTOR_ID);
+  public TalonFX leftMotor = new TalonFX(Constants.Climber.LEFT_MOTOR_ID);
+  public TalonFX rightMotor = new TalonFX(Constants.Climber.RIGHT_MOTOR_ID);
 
   Solenoid climberSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.Climber.SOLENOID_ID);
 
@@ -79,5 +79,10 @@ public class Climber extends PIDSubsystem {
   public void periodic() {
     SmartDashboard.putData(this);
     SmartDashboard.putBoolean("Climber/ArmsOut", armsOut);
+  }
+
+  @Override
+  public void close() throws Exception {
+    climberSolenoid.close();
   }
 }

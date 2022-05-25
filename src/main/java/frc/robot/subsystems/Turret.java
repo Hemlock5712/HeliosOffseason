@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Turret extends SubsystemBase {
+public class Turret extends SubsystemBase implements AutoCloseable {
 
   private final CANSparkMax m_turretMotor = new CANSparkMax(Constants.Turret.MOTOR_ID, MotorType.kBrushless);
   private final RelativeEncoder m_encoder = m_turretMotor.getEncoder();
@@ -140,4 +140,9 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putData(this);
   }
 
+  @Override
+  public void close() throws Exception {
+    m_turretMotor.close();
+    drivetrain.close();
+  }
 }
