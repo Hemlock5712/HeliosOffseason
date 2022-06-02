@@ -17,15 +17,14 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
 
 public class TwoBallMiddle extends AutoBaseCommand {
 
   PPSwerveControllerCommand driveBackCommand;
 
   public TwoBallMiddle(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-      Limelight limelight, Turret turret) {
-    super(drivetrain, shooter, intake, magazine, climber, limelight, turret);
+      Limelight limelight) {
+    super(drivetrain, shooter, intake, magazine, climber, limelight);
 
     addCommands(
         new ParallelRaceGroup(

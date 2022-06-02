@@ -12,9 +12,9 @@ import frc.robot.subsystems.*;
 public class SystemCheck extends AutoBaseCommand {
 
   public SystemCheck(Drivetrain drivetrain, Magazine magazine, Shooter shooter, Intake intake, Climber climber,
-      Limelight limelight, Turret turret) {
+      Limelight limelight) {
 
-    super(drivetrain, shooter, intake, magazine, climber, limelight, turret);
+    super(drivetrain, shooter, intake, magazine, climber, limelight);
 
     addCommands(
         new FieldDrive(drivetrain, () -> 0.5, () -> 0, () -> 0).withTimeout(1),
@@ -70,9 +70,8 @@ public class SystemCheck extends AutoBaseCommand {
         new ClimberAboveBar(climber),
         new WaitCommand(1),
         new ClimberToBottom(climber),
-        new ClimberArmsOut(climber, turret),
-        // TODO: ADD TURRET AIMING HERE
-        new ClimberArmsIn(climber, turret));
+        new ClimberArmsOut(climber),
+        new ClimberArmsIn(climber));
   }
 
   @Override

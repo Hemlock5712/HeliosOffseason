@@ -20,7 +20,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -40,7 +39,6 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
-  private final Turret turret = new Turret(drivetrain);
 
   private final SendableChooser<AutoBaseCommand> m_chooser = new SendableChooser<>();
 
@@ -55,10 +53,10 @@ public class RobotContainer {
 
   private void configureAutonomous() {
     m_chooser.addOption("System Check",
-        new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight, turret));
+        new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight));
 
     m_chooser.setDefaultOption("2 Ball Middle",
-        new TwoBallMiddle(drivetrain, shooter, intake, magazine, climber, limelight, turret));
+        new TwoBallMiddle(drivetrain, shooter, intake, magazine, climber, limelight));
 
     SmartDashboard.putData(m_chooser);
   }
@@ -85,7 +83,6 @@ public class RobotContainer {
     magazine.setDefaultCommand(new MagazineAutoBump(magazine));
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> modifyAxis(primary_joystick.getLeftY()),
         () -> modifyAxis(primary_joystick.getLeftX()), () -> modifyAxis(primary_joystick.getRightX())));
-    turret.setDefaultCommand(new TurretTrackTower(turret));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
 
     /*
@@ -125,12 +122,12 @@ public class RobotContainer {
 
     // Retract climber arms, also locks turret to forward position
     new Button(operator_joystick::getBButton).whenPressed(
-            new ClimberArmsIn(climber, turret)
+            new ClimberArmsIn(climber)
     );
 
     // Extend climber arms, allows free rotation of turret
     new Button(operator_joystick::getXButton).whenPressed(
-            new ClimberArmsOut(climber, turret)
+            new ClimberArmsOut(climber)
     );
   }
 

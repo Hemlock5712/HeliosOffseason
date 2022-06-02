@@ -10,7 +10,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
 
 /**
  * Provides a base command structure for autonomous commands.
@@ -25,7 +24,6 @@ public abstract class AutoBaseCommand extends SequentialCommandGroup {
   protected Magazine magazine;
   protected Climber climber;
   protected Limelight limelight;
-  protected Turret turret;
 
   protected PIDController m_translationController = Constants.Auto.X_PID_CONTROLLER;
   protected PIDController m_strafeController = Constants.Auto.Y_PID_CONTROLLER;
@@ -34,13 +32,12 @@ public abstract class AutoBaseCommand extends SequentialCommandGroup {
   private boolean pathHasBeenGenerated = false;
 
   public AutoBaseCommand(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-      Limelight limelight, Turret turret) {
+      Limelight limelight) {
     this.drivetrain = drivetrain;
     this.shooter = shooter;
     this.intake = intake;
     this.magazine = magazine;
     this.limelight = limelight;
-    this.turret = turret;
 
     generate();
   }

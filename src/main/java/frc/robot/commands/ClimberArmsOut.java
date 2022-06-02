@@ -4,20 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.util.ArmsOut;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Turret;
 
 public class ClimberArmsOut extends SequentialCommandGroup {
 
-  public ClimberArmsOut(Climber climber, Turret turret) {
+  public ClimberArmsOut(Climber climber) {
 
-    addCommands(
-        new ArmsOut(climber),
-        new WaitCommand(2), // Wait 2 seconds before turret can rotate to ensure there's clearance
-        new InstantCommand(() -> turret.setTurretCanRotatePastArms(true)));
+    addCommands(new ArmsOut(climber));
   }
 }
