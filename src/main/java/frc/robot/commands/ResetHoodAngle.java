@@ -15,7 +15,7 @@ public class ResetHoodAngle extends SequentialCommandGroup {
   public ResetHoodAngle(Shooter shooter) {
 
     addCommands(
-        new RawHoodInput(shooter, () -> -0.1).raceWith(new WaitForHoodLimitSwitch(shooter)),
+        new WaitForHoodLimitSwitch(shooter).raceWith(new RawHoodInput(shooter, () -> 0.01)),
         new InstantCommand(() -> {
           shooter.zeroHoodEncoder();
         }));

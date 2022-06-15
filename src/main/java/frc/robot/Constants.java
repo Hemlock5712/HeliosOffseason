@@ -114,7 +114,7 @@ public final class Constants {
         public static final int RIGHT_MOTOR_ID = 15;
         public static final int SOLENOID_ID = 1;
 
-        public static final double kP = 0.5;
+        public static final double kP = 0.0001;
         public static final double kI = 0;
         public static final double kD = 0;
     }

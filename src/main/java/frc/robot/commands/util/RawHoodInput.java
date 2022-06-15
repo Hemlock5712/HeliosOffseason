@@ -30,4 +30,9 @@ public class RawHoodInput extends CommandBase {
   public void end(boolean interrupted) {
     m_shooter.setHoodSpeed(0);
   }
+
+  @Override
+  public boolean isFinished() {
+    return m_shooter.isHoodFrontSwitchTriggered();
+  }
 }

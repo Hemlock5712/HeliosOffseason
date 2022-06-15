@@ -5,18 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.wait.WaitForCargoInUpperMagazine;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 
-public class LimelightShoot extends ParallelCommandGroup {
+public class LimelightShoot extends ParallelRaceGroup {
   public LimelightShoot(Shooter shooter, Magazine magazine, Limelight limelight) {
     addCommands(
         new FlywheelLimelight(shooter, limelight),
         new SequentialCommandGroup(
-            new WaitForCargoInUpperMagazine(magazine),
+            new WaitCommand(0.5),
+            new WaitForCargoInUpperMagazine(magazine).raceWith(new MagazineAutoBump(magazine)),
             new FeedShooter(magazine)));
   }
 }

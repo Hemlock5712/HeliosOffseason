@@ -47,34 +47,35 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
         Constants.Drivetrain.FRONT_LEFT.DRIVE_MOTOR_ID,
         Constants.Drivetrain.FRONT_LEFT.STEER_MOTOR_ID,
         Constants.Drivetrain.FRONT_LEFT.ENCODER_ID,
-        Constants.Drivetrain.FRONT_LEFT.STEER_MOTOR_ID);
+        Constants.Drivetrain.FRONT_LEFT.STEER_OFFSET);
 
     m_frontRightModule = Mk4iSwerveModuleHelper.createFalcon500(
         Mk4iSwerveModuleHelper.GearRatio.L2,
         Constants.Drivetrain.FRONT_RIGHT.DRIVE_MOTOR_ID,
         Constants.Drivetrain.FRONT_RIGHT.STEER_MOTOR_ID,
         Constants.Drivetrain.FRONT_RIGHT.ENCODER_ID,
-        Constants.Drivetrain.FRONT_RIGHT.STEER_MOTOR_ID);
+        Constants.Drivetrain.FRONT_RIGHT.STEER_OFFSET);
 
     m_backLeftModule = Mk4iSwerveModuleHelper.createFalcon500(
         Mk4iSwerveModuleHelper.GearRatio.L2,
         Constants.Drivetrain.BACK_LEFT.DRIVE_MOTOR_ID,
         Constants.Drivetrain.BACK_LEFT.STEER_MOTOR_ID,
         Constants.Drivetrain.BACK_LEFT.ENCODER_ID,
-        Constants.Drivetrain.BACK_LEFT.STEER_MOTOR_ID);
+        Constants.Drivetrain.BACK_LEFT.STEER_OFFSET);
 
     m_backRightModule = Mk4iSwerveModuleHelper.createFalcon500(
         Mk4iSwerveModuleHelper.GearRatio.L2,
         Constants.Drivetrain.BACK_RIGHT.DRIVE_MOTOR_ID,
         Constants.Drivetrain.BACK_RIGHT.STEER_MOTOR_ID,
         Constants.Drivetrain.BACK_RIGHT.ENCODER_ID,
-        Constants.Drivetrain.BACK_RIGHT.STEER_MOTOR_ID);
+        Constants.Drivetrain.BACK_RIGHT.STEER_OFFSET);
 
     SmartDashboard.putData("Field", m_field);
   }
 
   /**
-   * Fully resets the gyroscope angle. You probably want calibrateGyroscope() instead.
+   * Fully resets the gyroscope angle. You probably want calibrateGyroscope()
+   * instead.
    */
   public void zeroGyroscope() {
     m_pigeon.setYaw(0.0);

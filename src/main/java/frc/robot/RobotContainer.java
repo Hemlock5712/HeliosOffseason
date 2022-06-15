@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.*;
 import frc.robot.commands.autonomous.SystemCheck;
@@ -51,6 +52,10 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  public Drivetrain getDrivetrain() {
+    return drivetrain;
+  }
+
   private void configureAutonomous() {
     m_chooser.addOption("System Check",
         new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight));
@@ -90,45 +95,42 @@ public class RobotContainer {
      */
     // Calibrate gyroscope
     new Button(primary_joystick::getAButton).whenPressed(
-            drivetrain::calibrateGyroscope
-    );
+        drivetrain::calibrateGyroscope);
 
     // Intake
     new Button(primary_joystick::getRightBumper).whenHeld(
-            new IntakeCargo(intake, magazine)
-    );
+        new IntakeCargo(intake, magazine));
 
     // Reverse intake
     new Button(primary_joystick::getLeftBumper).whenHeld(
-            new MagazineSpitCargo(magazine)
-    );
+        new MagazineSpitCargo(magazine));
 
     /*
      * Operator Commands
      */
     // Shoot using limelight
-    new Button(operator_joystick::getRightBumper).whenHeld(
-            new LimelightShoot(shooter, magazine, limelight)
-    );
+    new Button(operator_joystick::getRightBumper).whileHeld(
+        new LimelightShoot(shooter, magazine, limelight)).whenReleased(new InstantCommand(() -> {
+          shooter.runMotor(0);
+        }));
     // Raise climber to top of bar
-    new Button(operator_joystick::getAButton).whenPressed(
-            new ClimberAboveBar(climber)
-    );
+    new Button(operator_joystick::getYButton).whenPressed(
+        new ClimberAboveBar(climber));
 
     // Drop climber to bottom
-    new Button(operator_joystick::getYButton).whenPressed(
-            new ClimberToBottom(climber)
-    );
+    new Button(operator_joystick::getAButton).whenPressed(
+        new ClimberToBottom(climber));
 
     // Retract climber arms, also locks turret to forward position
     new Button(operator_joystick::getBButton).whenPressed(
-            new ClimberArmsIn(climber)
-    );
+        new ClimberArmsIn(climber));
 
     // Extend climber arms, allows free rotation of turret
     new Button(operator_joystick::getXButton).whenPressed(
-            new ClimberArmsOut(climber)
-    );
+        new ClimberArmsOut(climber));
+
+    new Button(operator_joystick::getStartButton).whenPressed(
+        new CalibrateClimber(climber));
   }
 
   private double deadband(double value, double deadband) {

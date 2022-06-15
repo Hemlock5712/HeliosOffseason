@@ -16,6 +16,6 @@ public class WaitForHoodLimitSwitch extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return m_shooter.isHoodBackSwitchTriggered();
+    return m_shooter.isHoodFrontSwitchTriggered();
   }
 }

@@ -51,13 +51,12 @@
       "open": true
     },
     "SmartDashboard": {
-      "Magazine": {
+      "Field": {
         "open": true
       },
       "SendableChooser[0]": {
         "open": true
-      },
-      "open": true
+      }
     }
   }
 }

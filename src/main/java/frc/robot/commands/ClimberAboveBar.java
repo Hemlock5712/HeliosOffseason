@@ -24,6 +24,6 @@ public class ClimberAboveBar extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return Math.abs(m_climber.getMeasurement() - setpoint) < 200;
+    return Math.abs(m_climber.getMeasurement() - setpoint) < 200 || m_climber.getLimitSwitchUp();
   }
 }

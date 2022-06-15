@@ -30,15 +30,11 @@ public class MagazineAutoBump extends CommandBase {
       if (m_Magazine.ballInLower()) {
         m_Magazine.runLowerMagazine(0);
       } else {
-        m_Magazine.runLowerMagazine(0.15);
+        m_Magazine.runLowerMagazine(0.25);
       }
     } else {
-      if (m_Magazine.ballInLower()) {
-        m_Magazine.runUpperMagazine(0.4);
-        m_Magazine.runLowerMagazine(0.4);
-      } else {
-        m_Magazine.runLowerMagazine(0.15);
-      }
+      m_Magazine.runUpperMagazine(0.2);
+      m_Magazine.runLowerMagazine(0.25);
     }
   }
 

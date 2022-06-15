@@ -34,13 +34,16 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     rightShooter.setNeutralMode(NeutralMode.Brake);
 
     hood.setIdleMode(IdleMode.kBrake);
-    hood.setInverted(true);
 
     hood.getPIDController().setP(0.5);
     hood.getPIDController().setIZone(0.2);
+    hood.getPIDController().setOutputRange(-.1, .1);
 
     rightShooter.setInverted(true);
     rightShooter.follow(leftShooter, FollowerType.AuxOutput1);
+
+    leftShooter.setNeutralMode(NeutralMode.Coast);
+    rightShooter.setNeutralMode(NeutralMode.Coast);
 
     leftShooter.config_kP(0, Constants.Shooter.kP, 30);
     leftShooter.config_kI(0, Constants.Shooter.kI, 30);
@@ -73,11 +76,15 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
   }
 
   public void setHoodSpeed(double speed) {
-    hood.set(-0.3);
+    hood.set(speed);
   }
 
   public boolean isHoodBackSwitchTriggered() {
     return backLimitSwitch.isPressed();
+  }
+
+  public boolean isHoodFrontSwitchTriggered() {
+    return frontLimitSwitch.isPressed();
   }
 
   public boolean isHoodAtAngle() {
