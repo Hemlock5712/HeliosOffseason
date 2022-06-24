@@ -96,8 +96,12 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
     m_pigeon.setYaw(angle);
   }
 
+  public Rotation2d getRawGyroscope() {
+    return Rotation2d.fromDegrees(m_pigeon.getYaw());
+  }
+
   public Rotation2d getGyroscopeRotation() {
-    return Rotation2d.fromDegrees(m_pigeon.getYaw() + gyroOffset - 90);
+    return Rotation2d.fromDegrees(m_pigeon.getYaw() + gyroOffset);
   }
 
   public SwerveModuleState getState(SwerveModule module) {
@@ -160,10 +164,10 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
 
   @Override
   public void periodic() {
-    m_odemetry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule),
+    m_odemetry.update(getRawGyroscope(), getState(m_frontLeftModule), getState(m_frontRightModule),
         getState(m_backLeftModule), getState(m_backRightModule));
     SmartDashboard.putData(this);
-    SmartDashboard.putNumber("Drivetrain/Gyro", getGyroscopeRotation().getDegrees());
+    SmartDashboard.putNumber("Drivetrain/Gyro", getRawGyroscope().getDegrees());
   }
 
   @Override

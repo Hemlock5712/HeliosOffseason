@@ -30,7 +30,7 @@ public class MagazineSpitCargo extends CommandBase {
     } else {
       m_magazine.runUpperMagazine(-0.5);
     }
-    m_magazine.runLowerMagazine(-0.5);
+    m_magazine.runLowerMagazine(-0.7);
   }
 
   // Called once the command ends or is interrupted.
@@ -39,9 +39,4 @@ public class MagazineSpitCargo extends CommandBase {
     m_magazine.stop();
   }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return !m_magazine.ballInLower() && m_magazine.ballInUpper();
-  }
 }

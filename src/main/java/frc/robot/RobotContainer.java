@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.*;
 import frc.robot.commands.autonomous.DriveBackward;
+import frc.robot.commands.autonomous.FiveBallRight;
 import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.TwoBallMiddle;
 import frc.robot.commands.autonomous.util.AutoBaseCommand;
@@ -66,6 +67,7 @@ public class RobotContainer {
 
     m_chooser.addOption("Drive Backwards",new DriveBackward(shooter, drivetrain, intake, magazine, limelight));
 
+    m_chooser.addOption("Five Ball Right", new FiveBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -89,8 +91,8 @@ public class RobotContainer {
 
     // Default commands
     magazine.setDefaultCommand(new MagazineAutoBump(magazine));
-    drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> modifyAxis(primary_joystick.getLeftY()),
-        () -> modifyAxis(primary_joystick.getLeftX()), () -> modifyAxis(primary_joystick.getRightX())));
+    drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> -modifyAxis(primary_joystick.getLeftX()),
+        () -> modifyAxis(primary_joystick.getLeftY()), () -> modifyAxis(primary_joystick.getRightX())));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
 
     /*

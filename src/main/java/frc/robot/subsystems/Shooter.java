@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
 
     hood.setIdleMode(IdleMode.kBrake);
 
-    hood.getPIDController().setP(0.5);
+    hood.getPIDController().setP(0.2);
     hood.getPIDController().setIZone(0.2);
     hood.getPIDController().setOutputRange(-.3, .3);
 

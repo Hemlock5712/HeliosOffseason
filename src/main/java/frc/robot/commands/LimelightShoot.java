@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -13,17 +12,21 @@ import frc.robot.commands.wait.WaitForShooterSpeed;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
-  //, double shootOverride
+
+//, double shootOverride
 public class LimelightShoot extends ParallelRaceGroup {
 
   public LimelightShoot(Shooter shooter, Magazine magazine, Limelight limelight) {
     addCommands(
         new FlywheelLimelight(shooter, limelight),
         new SequentialCommandGroup(
-            new WaitCommand(0.25),
-            new WaitForShooterSpeed(shooter).withTimeout(1.5),
-            new WaitForCargoInUpperMagazine(magazine).raceWith(new MagazineAutoBump(magazine)),
-            new FeedShooter(magazine)));
+            new ParallelRaceGroup(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.25),
+                    new WaitForShooterSpeed(shooter).withTimeout(1.5),
+                    new WaitForCargoInUpperMagazine(magazine)),
+                new MagazineAutoBump(magazine)),
+            new FeedShooter(magazine).alongWith(new WaitCommand(0.5))));
 
   }
 }
