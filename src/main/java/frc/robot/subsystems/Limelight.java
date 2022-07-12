@@ -117,6 +117,7 @@ public class Limelight extends SubsystemBase {
     // Increase first number to shoot farther decrease 2nd to have lower shot angle
     // return new double[] {6600, -7}; THESE WORK FOR ON THE LINE!!!!!
     // return new double[] {6800, -5};
+     //return new double[] {7500, -4.5};
     return new double[] {output[0], output[1] };
     //return new double[] { arr[ans][1], arr[ans][2] };
   }

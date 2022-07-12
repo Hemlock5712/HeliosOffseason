@@ -44,11 +44,14 @@ public class MiddleStealDelay extends AutoBaseCommand {
             new SequentialCommandGroup(
                 driveBackCommand, // Drive to cargo
                 new InstantCommand(() -> drivetrain.stopModules()), // Stop
+                new WaitCommand(0.25),
                 new LimelightAim(drivetrain, limelight).withTimeout(1.5),
-                new WaitCommand(0.5)
+                new WaitCommand(0.1)
             ),
             new IntakeCargo(intake, magazine),
             new MagazineAutoBump(magazine)), // Grab cargo
+        new InstantCommand(() -> drivetrain.stopModules()),
+        new WaitCommand(0.25),
         new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5),
         new ParallelRaceGroup(
           new SequentialCommandGroup(
@@ -66,7 +69,7 @@ public class MiddleStealDelay extends AutoBaseCommand {
   }
 
   protected void generatePaths() {
-    PathPlannerTrajectory m_driveBack1 = PathPlanner.loadPath("Middle Steal Delayed A", 8, 5);
+    PathPlannerTrajectory m_driveBack1 = PathPlanner.loadPath("Middle Steal Delayed A", 6, 4);
 
     driveBackCommand = new PPSwerveControllerCommand(
         m_driveBack1,

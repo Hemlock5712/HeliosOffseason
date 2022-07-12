@@ -169,6 +169,7 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
     SmartDashboard.putData(this);
     SmartDashboard.putNumber("Drivetrain/Gyro", getRawGyroscope().getDegrees());
     m_field.setRobotPose(getPose2d());
+    SmartDashboard.putNumber("Drivetrain/WheelAngle", getState(m_frontLeftModule).angle.getRadians());
   }
 
   @Override

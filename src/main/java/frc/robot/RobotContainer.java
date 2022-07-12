@@ -149,7 +149,8 @@ public class RobotContainer {
         new LimelightShoot(shooter, magazine, limelight));
     // .whenReleased(new InstantCommand(() -> {
     // shooter.runMotor(6000)
-
+    // new Button(operator_joystick::getRightStickButton).whileHeld(
+    //     new LimelightShoot(shooter, magazine, limelight));  
     // Raise climber to top of bar
     // new Button(climber_joystick::getYButton).whenPressed(new
     // ClimberBelowBar(climber)).whenReleased(
