@@ -65,27 +65,34 @@ public class Limelight extends SubsystemBase {
   }
 
   public double[] calcHoodAndRPM() {
+    // TODO: Change thor to ty. Safe zone shot was inconsistent with distance, jumping between around 150 and 170
     double arr[][] = {
-        { Double.MIN_VALUE, 0, -25},
+        { Double.MIN_VALUE, 0, -25 },
         { -1, 18000, -40 },
+        {45, 15000, -35},
         { 90, 15000, -35 },
         { 100, 12000, -18 },
         { 110, 11000, -17 },
         { 120, 10000, -15 },
         { 130, 9000, -12 },
-        { 150, 8000, -10 },
+        { 145, 9000, -20 },
+        { 155, 9000, -20 },
+        { 167, 7500, -8 },
         { 170, 7250, -7 },
-        { 190, 7100, -5 },
+        { 182, 7000, -5 },
+        { 198, 7000, -5 },
         { 205, 7000, -3 },
         { 240, 6800, -2.5 },
         { 300, 6200, -1.25 },
         { 600, 4000, -1 },
-        { Double.MAX_VALUE, 0, -1}
+        { Double.MAX_VALUE, 0, -1 }
+
     };
 
     int start = 0, end = arr.length - 1;
 
-    if(!hasValidTarget()) return new double[]{6000, -14};
+    if (!hasValidTarget())
+      return new double[] { 3000, -5 };
 
     double yoffset = getHorizontalWidth();
     int ans = 0;
@@ -102,12 +109,16 @@ public class Limelight extends SubsystemBase {
       }
     }
 
-    double[] output = { 
-      MathUtilities.interpolate(arr[ans-1][0], arr[ans][0], arr[ans-1][1], arr[ans][1], yoffset), 
-      MathUtilities.interpolate(arr[ans-1][0], arr[ans][0], arr[ans-1][2], arr[ans][2], yoffset) 
+    double[] output = {
+        MathUtilities.interpolate(arr[ans - 1][0], arr[ans][0], arr[ans - 1][1], arr[ans][1], yoffset),
+        MathUtilities.interpolate(arr[ans - 1][0], arr[ans][0], arr[ans - 1][2], arr[ans][2], yoffset)
     };
-    // return new double[] { 2000, -4 };
-    return output;
+    // {6700, -10 }
+    // Increase first number to shoot farther decrease 2nd to have lower shot angle
+    // return new double[] {6600, -7}; THESE WORK FOR ON THE LINE!!!!!
+    // return new double[] {6800, -5};
+    return new double[] {output[0], output[1] };
+    //return new double[] { arr[ans][1], arr[ans][2] };
   }
 
   @Override

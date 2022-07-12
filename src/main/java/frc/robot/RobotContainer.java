@@ -11,17 +11,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
-import frc.robot.commands.*;
+import frc.robot.commands.CalibrateClimber;
+import frc.robot.commands.ClimberArmsIn;
+import frc.robot.commands.ClimberArmsOut;
+import frc.robot.commands.ClimberDown;
+import frc.robot.commands.ClimberUp;
+import frc.robot.commands.FieldDrive;
+import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.LimelightAim;
+import frc.robot.commands.LimelightShoot;
+import frc.robot.commands.MagazineAutoBump;
+import frc.robot.commands.MagazineSpitCargo;
+import frc.robot.commands.ResetHoodAngle;
 import frc.robot.commands.autonomous.DriveBackward;
 import frc.robot.commands.autonomous.FiveBallRight;
+import frc.robot.commands.autonomous.MiddleStealDelay;
 import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.TwoBallMiddle;
-import frc.robot.commands.autonomous.util.AutoBaseCommand;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.commands.autonomous.TwoBallStealLeft;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Rumble;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -36,9 +49,10 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
+  XboxController primary_joystick = new XboxController(0);
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
-  private final Magazine magazine = new Magazine();
+  private final Magazine magazine = new Magazine(primary_joystick);
   private final Shooter shooter = new Shooter();
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
@@ -65,9 +79,13 @@ public class RobotContainer {
     m_chooser.setDefaultOption("2 Ball Middle",
         new TwoBallMiddle(drivetrain, shooter, intake, magazine, climber, limelight));
 
-    m_chooser.addOption("Drive Backwards",new DriveBackward(shooter, drivetrain, intake, magazine, limelight));
+    m_chooser.addOption("Drive Backwards", new DriveBackward(shooter, drivetrain, intake, magazine, limelight));
 
-    m_chooser.addOption("Five Ball Right", new FiveBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
+    m_chooser.addOption("Five Ball Right",
+        new FiveBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
+    m_chooser.addOption("Left 2 Ball Stael",
+        new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, limelight));
+    m_chooser.addOption("Middle Steal Delay", new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, limelight));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -85,12 +103,15 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    XboxController primary_joystick = new XboxController(0);
+    // primary_joystick = new XboxController(0);
     XboxController operator_joystick = new XboxController(1);
+    XboxController climber_joystick = new XboxController(2);
     // XboxController climber_joystick = new XboxController(2);
 
     // Default commands
     magazine.setDefaultCommand(new MagazineAutoBump(magazine));
+    // rumble.setDefaultCommand(new MagazineAutoBumpRumble(primary_joystick, rumble,
+    // magazine));
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> -modifyAxis(primary_joystick.getLeftX()),
         () -> modifyAxis(primary_joystick.getLeftY()), () -> modifyAxis(primary_joystick.getRightX())));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
@@ -107,43 +128,51 @@ public class RobotContainer {
         new IntakeCargo(intake, magazine));
 
     // Reverse intake
-    new Button(primary_joystick::getLeftBumper).whenHeld(
+    new Button(primary_joystick::getXButton).whenHeld(
         new MagazineSpitCargo(magazine));
 
-    new Button(primary_joystick::getBButton).whenHeld(
-      new LimelightAim(drivetrain, limelight)
-    );
+    new Button(primary_joystick::getYButton).whenHeld(
+        new LimelightAim(drivetrain, limelight));
 
-    new Button(primary_joystick::getXButton).whileHeld(
-      new LimelightShoot(shooter, magazine, limelight)).whenReleased(new InstantCommand(() -> {
-        shooter.runMotor(0);
-      }));
+    new Button(primary_joystick::getLeftBumper).whileHeld(
+        new MagazineSpitCargo(magazine));
+    // new LimelightShoot(shooter, magazine, limelight)).whenReleased(new
+    // InstantCommand(() -> {
+    // shooter.runMotor(0);
+    // }));
 
     /*
      * Operator Commands
      */
     // Shoot using limelight
     new Button(operator_joystick::getRightBumper).whileHeld(
-        new LimelightShoot(shooter, magazine, limelight)).whenReleased(new InstantCommand(() -> {
-          shooter.runMotor(0);
-        }));
+        new LimelightShoot(shooter, magazine, limelight));
+    // .whenReleased(new InstantCommand(() -> {
+    // shooter.runMotor(6000)
+
     // Raise climber to top of bar
-    new Button(operator_joystick::getYButton).whenPressed(
-        new ClimberAboveBar(climber));
+    // new Button(climber_joystick::getYButton).whenPressed(new
+    // ClimberBelowBar(climber)).whenReleased(
+    // new ClimberAboveBar(climber));
+    new Button(climber_joystick::getYButton).whileHeld(new ClimberUp(climber))
+        .whenReleased(new InstantCommand(() -> climber.runLift(0)));
 
     // Drop climber to bottom
-    new Button(operator_joystick::getAButton).whenPressed(
-        new ClimberToBottom(climber));
+    // new Button(climber_joystick::getAButton).whenPressed(
+    // new ClimberToBottom(climber)).whenReleased(new
+    // ClimberToBottomOffBar(climber));
+    new Button(climber_joystick::getAButton).whileHeld(new ClimberDown(climber))
+        .whenReleased(new InstantCommand(() -> climber.runLift(0)));
 
     // Retract climber arms, also locks turret to forward position
-    new Button(operator_joystick::getBButton).whenPressed(
+    new Button(climber_joystick::getBButton).whenPressed(
         new ClimberArmsIn(climber));
 
     // Extend climber arms, allows free rotation of turret
-    new Button(operator_joystick::getXButton).whenPressed(
+    new Button(climber_joystick::getXButton).whenPressed(
         new ClimberArmsOut(climber));
 
-    new Button(operator_joystick::getStartButton).whenPressed(
+    new Button(climber_joystick::getStartButton).whenPressed(
         new CalibrateClimber(climber));
   }
 

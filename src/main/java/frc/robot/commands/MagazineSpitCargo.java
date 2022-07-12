@@ -28,9 +28,9 @@ public class MagazineSpitCargo extends CommandBase {
     if (m_magazine.ballInLower()) {
       m_magazine.runUpperMagazine(0);
     } else {
-      m_magazine.runUpperMagazine(-0.5);
+      m_magazine.runUpperMagazine(-10000);
     }
-    m_magazine.runLowerMagazine(-0.7);
+    m_magazine.runLowerMagazine(-10000);
   }
 
   // Called once the command ends or is interrupted.

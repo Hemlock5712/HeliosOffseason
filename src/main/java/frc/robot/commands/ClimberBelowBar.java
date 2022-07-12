@@ -10,7 +10,7 @@ import frc.robot.subsystems.Climber;
 public class ClimberBelowBar extends CommandBase {
 
   Climber m_climber;
-  private static int setpoint = 230000;
+  private static int setpoint = 220000;
 
   public ClimberBelowBar(Climber climber) {
     m_climber = climber;

@@ -23,10 +23,10 @@ public class LimelightShoot extends ParallelRaceGroup {
             new ParallelRaceGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(0.25),
-                    new WaitForShooterSpeed(shooter).withTimeout(1.5),
+                    new WaitForShooterSpeed(shooter).withTimeout(.3),
                     new WaitForCargoInUpperMagazine(magazine)),
                 new MagazineAutoBump(magazine)),
-            new FeedShooter(magazine).alongWith(new WaitCommand(0.5))));
+            new FeedShooter(magazine).alongWith(new WaitCommand(0.25))));
 
   }
 }

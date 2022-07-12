@@ -7,10 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
 
-public class MagazineAutoBump extends CommandBase {
+public class MagazineAutoBumpEndWhenFull extends CommandBase {
   private Magazine m_Magazine;
 
-  public MagazineAutoBump(Magazine magazine) {
+  public MagazineAutoBumpEndWhenFull(Magazine magazine) {
     m_Magazine = magazine;
     addRequirements(magazine);
   }
@@ -36,6 +36,11 @@ public class MagazineAutoBump extends CommandBase {
       m_Magazine.runUpperMagazine(2500);
       m_Magazine.runLowerMagazine(7000);
     }
+  }
+
+  @Override
+  public boolean isFinished() {
+    return m_Magazine.isFull();
   }
 
   @Override

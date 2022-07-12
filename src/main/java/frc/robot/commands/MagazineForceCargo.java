@@ -7,30 +7,32 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
 
-public class FeedShooter extends CommandBase {
+public class MagazineForceCargo extends CommandBase {
+  Magazine m_magazine;
 
-  private final Magazine m_magazine;
-
-  public FeedShooter(Magazine magazine) {
+  public MagazineForceCargo(Magazine magazine) {
     m_magazine = magazine;
+
     addRequirements(magazine);
   }
 
   @Override
   public void initialize() {
+    m_magazine.stop();
   }
 
   @Override
   public void execute() {
-    m_magazine.runUpperMagazine(9000);
+    // Don't forcibly cram cargo together if there's already one in
+    // the lower magazine
+    m_magazine.runUpperMagazine(8000);
+    m_magazine.runLowerMagazine(6000);
   }
 
+  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_magazine.stop();
   }
 
-  @Override
-  public boolean isFinished() {
-    return !m_magazine.ballInUpper();
-  }
 }

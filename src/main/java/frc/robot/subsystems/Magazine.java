@@ -5,10 +5,13 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,18 +24,31 @@ public class Magazine extends SubsystemBase implements AutoCloseable {
   AnalogInput lowerBallSensor = new AnalogInput(Constants.Magazine.LOWER_SENSOR);
   AnalogInput upperBallSensor = new AnalogInput(Constants.Magazine.UPPER_SENSOR);
 
-  public Magazine() {
+  XboxController controller;
+
+  public Magazine(XboxController controller) {
     lowerMagazine.setIdleMode(IdleMode.kBrake);
     upperMagazine.setIdleMode(IdleMode.kBrake);
     upperMagazine.setInverted(true);
+
+    lowerMagazine.getPIDController().setP(0.0001);
+    upperMagazine.getPIDController().setP(0.0001);
+    lowerMagazine.getPIDController().setI(0.0000);
+    upperMagazine.getPIDController().setI(0.0000);
+    lowerMagazine.getPIDController().setD(0);
+    upperMagazine.getPIDController().setD(0);
+
+    this.controller = controller;
   }
 
   public void runLowerMagazine(double speed) {
-    lowerMagazine.set(speed);
+    // lowerMagazine.set(speed*1.15);
+    lowerMagazine.getPIDController().setReference(speed, ControlType.kVelocity);
   }
 
   public void runUpperMagazine(double speed) {
-    upperMagazine.set(speed);
+    // upperMagazine.set(speed);
+    upperMagazine.getPIDController().setReference(speed, ControlType.kVelocity);
   }
 
   public boolean ballInUpper() {

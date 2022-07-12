@@ -24,6 +24,7 @@ public class Climber extends PIDSubsystem implements AutoCloseable {
 
   boolean isCalibrated = false;
   boolean armsOut = false;
+  boolean slowMode = false;
 
   public Climber() {
     super(new PIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD));
@@ -63,7 +64,7 @@ public class Climber extends PIDSubsystem implements AutoCloseable {
   }
 
   public void useOutput(double output, double setpoint) {
-    runLift(output);
+    runLift(slowMode ? output * 0.3 : output);
     SmartDashboard.putNumber("Climber/TargetOutput", output);
     SmartDashboard.putNumber("Climber/TargetPosition", setpoint);
   }
@@ -77,10 +78,20 @@ public class Climber extends PIDSubsystem implements AutoCloseable {
     return armsOut;
   }
 
+  public void setSlowMode(boolean isSlow) {
+    slowMode = isSlow;
+  }
+
+  public boolean isSlow() {
+    return slowMode;
+  }
+
   @Override
   public void periodic() {
-    getController().setSetpoint(getSetpoint());
-    useOutput(getController().calculate(getMeasurement()), getSetpoint());
+    // if(isCalibrated) {
+    //   getController().setSetpoint(getSetpoint());
+    //   useOutput(getController().calculate(getMeasurement()), getSetpoint());
+    // }
     SmartDashboard.putData(this);
     SmartDashboard.putBoolean("Climber/ArmsOut", armsOut);
     SmartDashboard.putNumber("Climber/CurrentPosition", getMeasurement());
