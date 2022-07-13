@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.FlywheelLimelight;
@@ -36,30 +37,28 @@ public class TwoBallStealLeft extends AutoBaseCommand {
     addCommands(
         new InstantCommand(() -> {
           drivetrain.setGyroscope(-64.80);
-          drivetrain.resetOdometry(new Pose2d(6.86, 5.86, Rotation2d.fromDegrees(-64.80)));
+          drivetrain.resetOdometry(new Pose2d(6.84, 5.74, Rotation2d.fromDegrees(-64.80)));
         }),
-        new ParallelRaceGroup(
+        new ParallelDeadlineGroup(
             new SequentialCommandGroup(
                 driveBackCommand, // Drive to cargo
                 new InstantCommand(() -> drivetrain.stopModules()), // Stop
-                new LimelightAim(drivetrain, limelight).withTimeout(1.5),
-                new LimelightShoot(shooter, magazine, limelight), // Shoot cargo
-                new LimelightShoot(shooter, magazine, limelight) // Shoot second cargo
-            ),
-            new IntakeCargo(intake, magazine)), // Grab cargo
-        new ParallelRaceGroup(
-          new SequentialCommandGroup(
-            stealCommand,
-            new InstantCommand(() -> drivetrain.stopModules())
-          ),
-          new IntakeCargo(intake, magazine)
-        ),
+                new LimelightAim(drivetrain, limelight).withTimeout(1.5)),
+            new IntakeCargo(intake, magazine),
+            new MagazineAutoBump(magazine)), // Grab cargo
+        new LimelightShoot(shooter, magazine, limelight), // Shoot cargo
+        new LimelightShoot(shooter, magazine, limelight), // Shoot second cargo
+        new ParallelDeadlineGroup(
+            new SequentialCommandGroup(
+                stealCommand,
+                new InstantCommand(() -> drivetrain.stopModules())),
+            new IntakeCargo(intake, magazine),
+            new MagazineAutoBump(magazine)),
         new InstantCommand(() -> {
           shooter.runMotor(0);
           intake.setIntakeDown(false);
         }),
-        new MagazineSpitCargo(magazine)
-    );
+        new MagazineSpitCargo(magazine).withTimeout(1.5));
   }
 
   protected void generatePaths() {
@@ -74,16 +73,16 @@ public class TwoBallStealLeft extends AutoBaseCommand {
         m_thetaController,
         drivetrain::setAllStates,
         drivetrain);
-      PathPlannerTrajectory m_driveBack2 = PathPlanner.loadPath("Left Ball Steal B", 4, 2);
+    PathPlannerTrajectory m_driveBack2 = PathPlanner.loadPath("Left Ball Steal B", 4, 2);
 
-      stealCommand = new PPSwerveControllerCommand(
-          m_driveBack2,
-          drivetrain::getPose2d,
-          drivetrain.getKinematics(),
-          m_translationController,
-          m_strafeController,
-          m_thetaController,
-          drivetrain::setAllStates,
-          drivetrain);
+    stealCommand = new PPSwerveControllerCommand(
+        m_driveBack2,
+        drivetrain::getPose2d,
+        drivetrain.getKinematics(),
+        m_translationController,
+        m_strafeController,
+        m_thetaController,
+        drivetrain::setAllStates,
+        drivetrain);
   }
 }

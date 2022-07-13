@@ -21,20 +21,21 @@ import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.LimelightAim;
 import frc.robot.commands.LimelightShoot;
 import frc.robot.commands.MagazineAutoBump;
+import frc.robot.commands.MagazineForceCargo;
 import frc.robot.commands.MagazineSpitCargo;
+import frc.robot.commands.ManualShoot;
 import frc.robot.commands.ResetHoodAngle;
-import frc.robot.commands.autonomous.DriveBackward;
+import frc.robot.commands.autonomous.BackShoot;
 import frc.robot.commands.autonomous.FiveBallRight;
 import frc.robot.commands.autonomous.MiddleStealDelay;
 import frc.robot.commands.autonomous.SystemCheck;
-import frc.robot.commands.autonomous.TwoBallMiddle;
+import frc.robot.commands.autonomous.ThreeBallRight;
 import frc.robot.commands.autonomous.TwoBallStealLeft;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Rumble;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -76,16 +77,16 @@ public class RobotContainer {
     m_chooser.addOption("System Check",
         new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight));
 
-    m_chooser.setDefaultOption("2 Ball Middle",
-        new TwoBallMiddle(drivetrain, shooter, intake, magazine, climber, limelight));
-
-    m_chooser.addOption("Drive Backwards", new DriveBackward(shooter, drivetrain, intake, magazine, limelight));
-
     m_chooser.addOption("Five Ball Right",
         new FiveBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
-    m_chooser.addOption("Left 2 Ball Stael",
+    m_chooser.addOption("Left 2 Ball Steal",
         new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, limelight));
-    m_chooser.addOption("Middle Steal Delay", new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, limelight));
+    m_chooser.addOption("Middle Steal Delay",
+        new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, limelight));
+    m_chooser.addOption("Three Ball Right",
+        new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
+    m_chooser.setDefaultOption("Drive Back Shoot",
+        new BackShoot(drivetrain, shooter, intake, magazine, climber, limelight));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -145,16 +146,19 @@ public class RobotContainer {
      * Operator Commands
      */
     // Shoot using limelight
-    new Button(operator_joystick::getRightBumper).whileHeld(
-        new LimelightShoot(shooter, magazine, limelight));
-    // .whenReleased(new InstantCommand(() -> {
-    // shooter.runMotor(6000)
-    // new Button(operator_joystick::getRightStickButton).whileHeld(
-    //     new LimelightShoot(shooter, magazine, limelight));  
-    // Raise climber to top of bar
-    // new Button(climber_joystick::getYButton).whenPressed(new
-    // ClimberBelowBar(climber)).whenReleased(
-    // new ClimberAboveBar(climber));
+    // new Button(operator_joystick::getRightBumper).whileHeld(
+    // new LimelightShoot(shooter, magazine, limelight));
+
+    new Button(operator_joystick::getRightStickButton).whileHeld(
+        new ManualShoot(shooter, magazine, () -> 7500, () -> -4.5));
+    new Button(operator_joystick::getBButton).whileHeld(
+        new ManualShoot(shooter, magazine, () -> 6800, () -> -5));
+    new Button(operator_joystick::getYButton).whileHeld(
+        new ManualShoot(shooter, magazine, () -> 3000, () -> -5));
+    new Button(operator_joystick::getXButton).whileHeld(
+        new ManualShoot(shooter, magazine, () -> 9000, () -> -12));
+    new Button(operator_joystick::getLeftBumper).whileHeld(new MagazineForceCargo(magazine));
+
     new Button(climber_joystick::getYButton).whileHeld(new ClimberUp(climber))
         .whenReleased(new InstantCommand(() -> climber.runLift(0)));
 

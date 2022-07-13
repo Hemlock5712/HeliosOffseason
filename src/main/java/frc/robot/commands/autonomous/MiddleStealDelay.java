@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -40,20 +41,17 @@ public class MiddleStealDelay extends AutoBaseCommand {
           drivetrain.resetOdometry(new Pose2d(6.99, 4.47, Rotation2d.fromDegrees(-22.99)));
         }),
         new WaitCommand(7),
-        new ParallelRaceGroup(
+        new ParallelDeadlineGroup(
             new SequentialCommandGroup(
                 driveBackCommand, // Drive to cargo
                 new InstantCommand(() -> drivetrain.stopModules()), // Stop
-                new WaitCommand(0.25),
-                new LimelightAim(drivetrain, limelight).withTimeout(1.5),
-                new WaitCommand(0.1)
+                new LimelightAim(drivetrain, limelight).withTimeout(1)
             ),
             new IntakeCargo(intake, magazine),
             new MagazineAutoBump(magazine)), // Grab cargo
         new InstantCommand(() -> drivetrain.stopModules()),
-        new WaitCommand(0.25),
         new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5),
-        new ParallelRaceGroup(
+        new ParallelDeadlineGroup(
           new SequentialCommandGroup(
             stealCommand,
             new InstantCommand(() -> drivetrain.stopModules()),
