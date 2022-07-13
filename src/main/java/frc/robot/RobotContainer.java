@@ -151,13 +151,16 @@ public class RobotContainer {
 
     new Button(operator_joystick::getRightStickButton).whileHeld(
         new ManualShoot(shooter, magazine, () -> 7500, () -> -4.5));
+    new Button(operator_joystick::getRightBumper).whileHeld(
+      new ManualShoot(shooter, magazine, () -> 6600, () -> -7)
+    );
     new Button(operator_joystick::getBButton).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 6800, () -> -5));
+        new ManualShoot(shooter, magazine, () -> 9000, () -> -12));
     new Button(operator_joystick::getYButton).whileHeld(
         new ManualShoot(shooter, magazine, () -> 3000, () -> -5));
     new Button(operator_joystick::getXButton).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 9000, () -> -12));
-    new Button(operator_joystick::getLeftBumper).whileHeld(new MagazineForceCargo(magazine));
+        new ManualShoot(shooter, magazine, () -> 8500, () -> -20));
+    // new Button(operator_joystick::getLeftBumper).whileHeld(new MagazineForceCargo(magazine));
 
     new Button(climber_joystick::getYButton).whileHeld(new ClimberUp(climber))
         .whenReleased(new InstantCommand(() -> climber.runLift(0)));

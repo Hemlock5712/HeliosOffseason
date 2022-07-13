@@ -26,7 +26,7 @@ public class MagazineForceCargo extends CommandBase {
     // Don't forcibly cram cargo together if there's already one in
     // the lower magazine
     m_magazine.runUpperMagazine(8000);
-    m_magazine.runLowerMagazine(6000);
+    m_magazine.runLowerMagazine(5000);
   }
 
   // Called once the command ends or is interrupted.

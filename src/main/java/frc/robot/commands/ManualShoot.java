@@ -26,13 +26,13 @@ public class ManualShoot extends ParallelRaceGroup {
     addCommands(
         new RawShooterInput(shooter, speed, angle),
         new SequentialCommandGroup(
-            new ParallelDeadlineGroup(
+            new ParallelRaceGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(0.25),
-                    new WaitForShooterSpeed(shooter).withTimeout(.3),
+                    new WaitForShooterSpeed(shooter).withTimeout(1),
                     new WaitForCargoInUpperMagazine(magazine)),
-                new MagazineAutoBump(magazine))
-            ));
+                new MagazineAutoBump(magazine)),
+            new FeedShooter(magazine).alongWith(new WaitCommand(0.25))));
 
   }
 }
