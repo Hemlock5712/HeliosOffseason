@@ -28,7 +28,7 @@ public class ManualShoot extends ParallelRaceGroup {
         new SequentialCommandGroup(
             new ParallelRaceGroup(
                 new SequentialCommandGroup(
-                    new WaitCommand(0.25),
+                    new WaitCommand(0.3),
                     new WaitForShooterSpeed(shooter).withTimeout(1),
                     new WaitForCargoInUpperMagazine(magazine)),
                 new MagazineAutoBump(magazine)),

@@ -77,8 +77,8 @@ public class RobotContainer {
     m_chooser.addOption("System Check",
         new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight));
 
-    m_chooser.addOption("Five Ball Right",
-        new FiveBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
+    // m_chooser.addOption("Five Ball Right",
+    //     new FiveBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
     m_chooser.addOption("Left 2 Ball Steal",
         new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, limelight));
     m_chooser.addOption("Middle Steal Delay",
@@ -149,18 +149,23 @@ public class RobotContainer {
     // new Button(operator_joystick::getRightBumper).whileHeld(
     // new LimelightShoot(shooter, magazine, limelight));
 
+    // Close safe zone
     new Button(operator_joystick::getRightStickButton).whileHeld(
         new ManualShoot(shooter, magazine, () -> 7500, () -> -4.5));
+        // Close Tarmac
     new Button(operator_joystick::getRightBumper).whileHeld(
-      new ManualShoot(shooter, magazine, () -> 6600, () -> -7)
+      new ManualShoot(shooter, magazine, () -> 6700, () -> -5)
     );
+    // Far tarmac
     new Button(operator_joystick::getBButton).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 9000, () -> -12));
+        new ManualShoot(shooter, magazine, () -> 7000, () -> -7));
+    // Low Goal
     new Button(operator_joystick::getYButton).whileHeld(
         new ManualShoot(shooter, magazine, () -> 3000, () -> -5));
+    // Far safe zone
     new Button(operator_joystick::getXButton).whileHeld(
         new ManualShoot(shooter, magazine, () -> 8500, () -> -20));
-    // new Button(operator_joystick::getLeftBumper).whileHeld(new MagazineForceCargo(magazine));
+    
 
     new Button(climber_joystick::getYButton).whileHeld(new ClimberUp(climber))
         .whenReleased(new InstantCommand(() -> climber.runLift(0)));

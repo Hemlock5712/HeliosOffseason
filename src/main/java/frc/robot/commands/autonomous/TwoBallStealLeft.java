@@ -17,6 +17,7 @@ import frc.robot.commands.LimelightAim;
 import frc.robot.commands.LimelightShoot;
 import frc.robot.commands.MagazineAutoBump;
 import frc.robot.commands.MagazineSpitCargo;
+import frc.robot.commands.ManualShoot;
 import frc.robot.commands.autonomous.util.AutoBaseCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -45,9 +46,13 @@ public class TwoBallStealLeft extends AutoBaseCommand {
                 new InstantCommand(() -> drivetrain.stopModules()), // Stop
                 new LimelightAim(drivetrain, limelight).withTimeout(1.5)),
             new IntakeCargo(intake, magazine),
-            new MagazineAutoBump(magazine)), // Grab cargo
-        new LimelightShoot(shooter, magazine, limelight), // Shoot cargo
-        new LimelightShoot(shooter, magazine, limelight), // Shoot second cargo
+            new MagazineAutoBump(magazine)
+           ), // Grab cargo
+        new InstantCommand(() -> drivetrain.stopModules()),
+        // new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5), // Shoot cargo
+        // new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5), // Shoot second cargo
+        new ManualShoot(shooter, magazine, () -> 6800, () -> -3).withTimeout(1),
+        new ManualShoot(shooter, magazine, () -> 6700, () -> -5).withTimeout(1),
         new ParallelDeadlineGroup(
             new SequentialCommandGroup(
                 stealCommand,
@@ -55,6 +60,7 @@ public class TwoBallStealLeft extends AutoBaseCommand {
             new IntakeCargo(intake, magazine),
             new MagazineAutoBump(magazine)),
         new InstantCommand(() -> {
+          drivetrain.stopModules();
           shooter.runMotor(0);
           intake.setIntakeDown(false);
         }),
