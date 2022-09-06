@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Creating autonomous routines - Gray Matter 2022</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Creating autonomous routines";
+        var mkdocs_page_input_path = "autonomous/creating.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Gray Matter 2022
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Helios</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Autonomous</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Creating autonomous routines</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#initial-file-creation">Initial file creation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#creating-the-paths">Creating the paths</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#loading-paths-into-code">Loading paths into code</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#make-the-robot-do-things-other-than-drive">Make the robot do things other than drive</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#sequentialcommandgroup">SequentialCommandGroup</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#parallelcommandgroup">ParallelCommandGroup</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#paralleldeadlinegroup">ParallelDeadlineGroup</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#parallelracegroup">ParallelRaceGroup</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#useful-commands">Useful commands</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#intakecargo">IntakeCargo</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#magazineautobump">MagazineAutoBump</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#limelightaim">LimelightAim</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#limelightshoot">LimelightShoot</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#manualshoot">ManualShoot</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#instantcommand">InstantCommand</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Gray Matter 2022</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+          <li>Autonomous &raquo;</li>
+      <li>Creating autonomous routines</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="creating-autonomous-routines">Creating autonomous routines</h1>
+<h2 id="initial-file-creation">Initial file creation</h2>
+<p>With the WPILIB VSCode extension, right click on the <code>robot/commands/autonomous</code> folder, then click on <code>Create a new class/command</code>.</p>
+<p>In the menu that pops up, choose <code>SequentialCommandGroup (New)</code>.</p>
+<p>Name the autonomous something useful</p>
+<p>It will generate some code similar to this:</p>
+<pre><code class="language-java">public class TestAutonomous extends SequentialCommandGroup {
+
+  public TestAutonomous() {
+
+    addCommands();
+  }
+}
+</code></pre>
+<p>Change the <code>extends</code> clause to extend <code>AutoBaseCommand</code> instead of <code>SequentialCommandGroup</code></p>
+<p>It will give errors upon doing this, as you need to implement the <code>generatePaths</code> method.</p>
+<p>Copy the following code to the bottom of the autonomous class</p>
+<pre><code class="language-java">protected void generatePaths() {
+
+}
+</code></pre>
+<p>The constructor will need to have all of the subsystems passed into it, so change it to be similar to the following</p>
+<pre><code class="language-java">public TestAutonomous(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber, Limelight limelight) {
+    super(drivetrain, shooter, intake, magazine, climber, limelight);
+    addCommands(
+        // Commands here
+    );
+};
+</code></pre>
+<blockquote>
+<p>The <code>super</code> method will automatically set all of the subsystems to variables that are accessible from anywhere in the command.</p>
+</blockquote>
+<h2 id="creating-the-paths">Creating the paths</h2>
+<p>In pathplanner, creating paths is extremely easy. The biggest thing to remember with it is that any time you need to stop and do something, that will need to be the end of a path. For example, our 5-ball auto is split into 3 different paths, each of which starts at the previous path's end position.</p>
+<p>The images below represent this, with the end of the A path being the same spot as the beginning of the B path.</p>
+<p><img alt="Five Ball A" src="../../img/Five-Ball-A.png" />
+<img alt="Five Ball B" src="../../img/Five-Ball-B.png" /></p>
+<h2 id="loading-paths-into-code">Loading paths into code</h2>
+<p>Back in the code, each path needs to be loaded in. Each path can be represented by a <code>PPSwerveControllerCommand</code> object at the class level, so it's easy to grab on the fly.</p>
+<pre><code class="language-java">PPSwerveControllerCommand driveBackCommand;
+</code></pre>
+<p>In the <code>generatePaths</code> method, create a <code>PathPlannerTrajectory</code> object to load the path in, then convert it into a <code>PPSwerveControllerCommand</code> that is set to that class variable.</p>
+<pre><code class="language-java">// 6 represents the max speed m/s of the robot
+// 4 represents the max acceleration m/s^2
+PathPlannerTrajectory m_driveBack1 = PathPlanner.loadPath(&quot;TestAutonomous&quot;, 6, 4);
+
+driveBackCommand = new PPSwerveControllerCommand(
+        m_driveBack1,
+        drivetrain::getPose2d,
+        drivetrain.getKinematics(),
+        m_translationController,
+        m_strafeController,
+        m_thetaController,
+        drivetrain::setAllStates,
+        drivetrain);
+</code></pre>
+<p>From here, in the <code>addCommands</code> call in the constructor, you can simply put the <code>PPSwerveControllerCommand</code> you created in there, and the robot will do it <em>automagically</em>.</p>
+<p>Add an <code>InstantCommand</code> to set up the gyro and odometry. The <code>setGyroscope</code> method should match the angle of the first point in PathPlanner, and the <code>resetOdometry</code> method should have the position and rotation of the first point. This basically just tells the robot where it is, which is essential for proper path following.</p>
+<pre><code class="language-java">addCommands(
+    new InstantCommand(() -&gt; {
+        drivetrain.setGyroscope(-21.10);
+        drivetrain.resetOdometry(new Pose2d(6.10, 4.9,  Rotation2d.fromDegrees(-21.10)));
+    }),
+)
+</code></pre>
+<blockquote>
+<p>THIS NEEDS TO BE DONE ANY TIME THE POINT IS CHANGED IN PATHPLANNER OR THINGS WILL BREAK</p>
+</blockquote>
+<h2 id="make-the-robot-do-things-other-than-drive">Make the robot do things other than drive</h2>
+<p>This is arguably the hardest part about the autonomous creation process. The different types of command groups get quite confusing, especially with their names being very similar. Here's a quick rundown of what each of them do, and when they should be used.</p>
+<h3 id="sequentialcommandgroup">SequentialCommandGroup</h3>
+<p>This runs nothing at the same time. It quite literally just runs the commands one after another, continuing on once each command finishes. This is used frequently for running multiple swerve commands after another, or doing something in a set order.</p>
+<h3 id="parallelcommandgroup">ParallelCommandGroup</h3>
+<p>This will run all commands at the same time, but not finish until all of the commands have also finished. This could be used for something like a climber if the arms were controlled by separate motors and limit switches. It would allow for each side to finish individually and the continue on with whatever the other commands are afterwards.</p>
+<h3 id="paralleldeadlinegroup">ParallelDeadlineGroup</h3>
+<p>This is your bread and butter command for autonomous. Whatever the first command is in the group is considered the "deadline", meaning that when it finishes, so does the rest of the group. This is used extremely frequenly alongside pathplanner, where you can have the <code>PPSwerveControllerCommand</code> running, but also have the intake down, have the magazine automatically bump cargo to where it needs to, or anything else that should just be running alongside the drive command. As soon as the first command finishes, all the other commands inside will stop as well, giving you a clean slate to work from.</p>
+<h3 id="parallelracegroup">ParallelRaceGroup</h3>
+<p>This is the thing that caused lots of grief early on in development. It is essentially the opposite of the <code>ParallelCommandGroup</code>, where if <strong>ANY</strong> of the commands in the group finish, the rest of them will be forced to stop. This caused issues where we thought PathPlanner was just being extremely inconsistent, but it was actually due to whether we had 2 cargo in our magazine, which was considered a stop point for the <code>MagazineAutoBump</code> command, which forced the drive commands and all the other ones in the group to finish as well.</p>
+<blockquote>
+<p>There are useful times to use this, but in most situations, I'd advise against it due to it causing issues that are not easily traced down.</p>
+</blockquote>
+<h2 id="useful-commands">Useful commands</h2>
+<p>For the 2022 robot, we have a bunch of super helpful commands for making autonomous creation easy.</p>
+<h3 id="intakecargo"><code>IntakeCargo</code></h3>
+<pre><code class="language-java">new IntakeCargo(intake, magazine)
+</code></pre>
+<p>In 99% of cases, this will be in a <code>ParallelDeadlineGroup</code> with the drive command and the <code>MagazineAutoBump</code> command. It simply puts down the intake and runs the intake motors until there are 2 pieces of cargo in the robot, in which it will lift it and stop all of the motors.</p>
+<h3 id="magazineautobump"><code>MagazineAutoBump</code></h3>
+<pre><code class="language-java">new MagazineAutoBump(magazine)
+</code></pre>
+<p>This will attempt to automatically bump cargo to the top of the magazine at all points, keeping the bottom of the magazine open for another cargo to come in. The below table shows the states of what the magazine will do in different ball situations. There are small speed adjustments that are made based on whether there is cargo in the upper magazine, but they are only there to ensure that a cargo isn't forced past the sensors. This command should be running pretty much all the time, except for when shooting, as that command handles it automatically.</p>
+<table>
+<thead>
+<tr>
+<th>Cargo in upper</th>
+<th>Cargo in lower</th>
+<th>Upper motor</th>
+<th>Lower motor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No</td>
+<td>No</td>
+<td>Running</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>Yes</td>
+<td>No</td>
+<td>Not Running</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>No</td>
+<td>Yes</td>
+<td>Running</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>Yes</td>
+<td>Yes</td>
+<td>Not Running</td>
+<td>Not Running</td>
+</tr>
+</tbody>
+</table>
+<h3 id="limelightaim">LimelightAim</h3>
+<pre><code class="language-java">new LimelightAim(drivetrain, limelight).withTimeout(1.5)
+</code></pre>
+<p>This command simply lines up the robot with the target using the Limelight. In 99% of cases, there should be a <code>.withTimeout()</code> clause attached to it, as that prevents it from just getting stuck with aiming forever. Typically after around a second, the robot is aimed properly anyway, so 1 second or 1.5 is the typical amount that should be used.</p>
+<h3 id="limelightshoot">LimelightShoot</h3>
+<pre><code class="language-java">new LimelightShoot(shooter, magazine, limelight)
+</code></pre>
+<p>When the limelight is properly tuned for a field, this will automatically calculate the speed and hood angles and shoot a cargo from wherever you are on the field. We've been having issues with this, so <code>ManualShoot</code> has been being used instead lately.</p>
+<h3 id="manualshoot">ManualShoot</h3>
+<pre><code class="language-java">new ManualShoot(shooter, magazine, () -&gt; 7000, () -&gt; -7)
+</code></pre>
+<p>This is the backup shoot command, which sets the hood angle and shoots the cargo at a specific speed. The calling of this command requires <code>DoubleProvider</code>s to be passed in, but that can be done with a simple arrow function (<code>() -&gt; 7000</code>). It will automatically wait until the shooter is up to speed, then bump the cargo into the flywheel, then move the next cargo to the top of the magazine to prepare for the next shot. This is what we started using when our limelight wasn't being consistent, which allowed for extremely accurate shots when mixed with good PathPlanner paths.</p>
+<h3 id="instantcommand">InstantCommand</h3>
+<pre><code class="language-java">new InstantCommand(() -&gt; {
+    shooter.runMotor(0);
+    intake.setIntakeDown(false);
+})
+</code></pre>
+<p>While not a custom command, this is one of the most versatile commands out there. It allows you to run any code inside it that will be run when the command is told to, so it's good for resetting things to proper states before doing other things. It's also essential at the start of the autonomous routine to set up the gyro angles for where the robot is positioned.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../.." class="btn btn-neutral float-left" title="Helios"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../.." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme_extra.js" defer></script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
