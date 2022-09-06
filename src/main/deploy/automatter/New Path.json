@@ -1,0 +1,53 @@
+{
+  "name": "New Path",
+  "trajectory": [
+    {
+      "anchorPoint": {
+        "x": 6.985772846765377,
+        "y": 4.469159026191515
+      },
+      "holonomicAngle": -22.988,
+      "isReversal": false,
+      "nextControl": {
+        "x": 5.8576,
+        "y": 4.3823
+      },
+      "prevControl": null
+    },
+    {
+      "anchorPoint": {
+        "x": 4.903057,
+        "y": 3.442265
+      },
+      "holonomicAngle": 27.950969027890157,
+      "isReversal": false,
+      "prevControl": {
+        "x": 5.75541,
+        "y": 3.74007
+      },
+      "nextControl": {
+        "x": 3.7026042417638423,
+        "y": 3.022829244252514
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.483622324010905,
+        "y": 5.206787214980406
+      },
+      "prevControl": {
+        "x": 3.977406900332254,
+        "y": 3.6302877526668937
+      },
+      "nextControl": null,
+      "holonomicAngle": -15.59281093926635,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false
+    }
+  ],
+  "commands": {
+    "pointCommands": [[], []],
+    "splineCommands": [[]]
+  }
+}

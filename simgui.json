@@ -24,9 +24,11 @@
       "/LiveWindow/Magazine": "Subsystem",
       "/LiveWindow/Shooter": "Subsystem",
       "/LiveWindow/Turret": "Subsystem",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Climber": "Subsystem",
       "/SmartDashboard/Drivetrain": "Subsystem",
@@ -54,9 +56,13 @@
       "Field": {
         "open": true
       },
+      "Intake": {
+        "open": true
+      },
       "SendableChooser[0]": {
         "open": true
-      }
+      },
+      "open": true
     }
   }
 }

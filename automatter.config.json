@@ -1,0 +1,9 @@
+{
+    "commands": [],
+    "year": 2022,
+    "holonomic": true,
+    "robotSize": {
+        "width": 0.89,
+        "length": 0.91
+    }
+}

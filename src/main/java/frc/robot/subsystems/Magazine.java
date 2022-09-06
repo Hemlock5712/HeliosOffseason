@@ -24,9 +24,7 @@ public class Magazine extends SubsystemBase implements AutoCloseable {
   AnalogInput lowerBallSensor = new AnalogInput(Constants.Magazine.LOWER_SENSOR);
   AnalogInput upperBallSensor = new AnalogInput(Constants.Magazine.UPPER_SENSOR);
 
-  XboxController controller;
-
-  public Magazine(XboxController controller) {
+  public Magazine() {
     lowerMagazine.setIdleMode(IdleMode.kBrake);
     upperMagazine.setIdleMode(IdleMode.kBrake);
     upperMagazine.setInverted(true);
@@ -37,8 +35,6 @@ public class Magazine extends SubsystemBase implements AutoCloseable {
     upperMagazine.getPIDController().setI(0.0000);
     lowerMagazine.getPIDController().setD(0);
     upperMagazine.getPIDController().setD(0);
-
-    this.controller = controller;
   }
 
   public void runLowerMagazine(double speed) {
