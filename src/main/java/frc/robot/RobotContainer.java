@@ -61,7 +61,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
-  private final Turret turret = new Turret(climber);
+  private final Turret turret = new Turret(climber, drivetrain);
 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
