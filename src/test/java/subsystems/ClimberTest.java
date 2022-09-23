@@ -42,14 +42,12 @@ public class ClimberTest {
         assertEquals(false, simPH.getSolenoidOutput(Constants.Climber.SOLENOID_ID));
     }
 
-    @Test
     public void armsDoGoUp() {
         climber.setSetpoint(1500);
         assertEquals(1500, climber.getSetpoint(), 0.1);
         assertEquals(1, climber.getController().calculate(0), .1);
     }
 
-    @Test
     public void armsDoGoDown() {
         leftMotorSim.addIntegratedSensorPosition(1500);
         climber.setSetpoint(0);

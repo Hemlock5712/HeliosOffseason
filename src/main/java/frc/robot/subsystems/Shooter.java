@@ -39,7 +39,6 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     hood.getPIDController().setIZone(0.2);
     hood.getPIDController().setOutputRange(-.3, .3);
 
-    rightShooter.setInverted(true);
     rightShooter.follow(leftShooter, FollowerType.AuxOutput1);
 
     leftShooter.setNeutralMode(NeutralMode.Coast);
@@ -55,6 +54,9 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     rightShooter.config_kD(0, Constants.Shooter.kD, 30);
     rightShooter.config_kF(0, Constants.Shooter.kF, 30);
     rightShooter.config_IntegralZone(0, 50);
+
+    leftShooter.setInverted(true);
+    rightShooter.setInverted(true);
 
     runMotor(0);
   }

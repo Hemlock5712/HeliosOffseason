@@ -12,6 +12,7 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -43,7 +44,8 @@ public final class Constants {
         public static final double MAX_ANG_ACCEL = MAX_VELOCITY_METERS
                 / Math.hypot(Constants.Drivetrain.TRACKWIDTH_METERS / 2.0, Constants.Drivetrain.WHEELBASE_METERS / 2.0);
     }
-//Intake is Front
+
+    // Intake is Front
     public static final class Drivetrain {
         public static final int PIGEON_ID = 13;
         public static final double WHEELBASE_METERS = 0.749;
@@ -83,13 +85,13 @@ public final class Constants {
     public static final class Turret {
         public static final int MOTOR_ID = 22;
 
-        public static final double kP = .25;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kF = 0;
+        public static final double kP = 0.0089;
+        public static final double kI = 0.00001;
+        public static final double kD = 0.00001;
+        public static final double kF = 0.002;
 
-        public static final int ENCODER_COUNTS_PER_REV = 42;
-        public static final int GEAR_RATIO = 4; // TODO: CHANGE THIS TO ACTUAL GEAR RATIO
+        public static final int ENCODER_TICKS_PER_ROTATION = 2048;
+        public static final int GEAR_RATIO = 6 * 9;
 
         public static final double CLIMBER_POLE_DEADZONE_CENTER = 45;
         public static final double CLIMBER_POLE_DEADZONE_WIDTH = 8;
@@ -98,6 +100,9 @@ public final class Constants {
         // Not used yet, will be using turret only if arms are down currently.
         public static final double CLIMBER_ARM_LEFT_ANGLE = 2;
         public static final double CLIMBER_ARM_RIGHT_ANGLE = 2;
+
+        public static final Rotation2d TRAVEL_LEFT_LIMIT = Rotation2d.fromDegrees(-90);
+        public static final Rotation2d TRAVEL_RIGHT_LIMIT = Rotation2d.fromDegrees(270);
 
         public static final TreeMap<Double, Double> TIME_OF_FLIGHT = new TreeMap<>(
                 Map.ofEntries(

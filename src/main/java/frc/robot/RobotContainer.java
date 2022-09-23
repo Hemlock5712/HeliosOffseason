@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.CalibrateClimber;
 import frc.robot.commands.ClimberArmsIn;
 import frc.robot.commands.ClimberArmsOut;
@@ -24,12 +25,14 @@ import frc.robot.commands.MagazineAutoBump;
 import frc.robot.commands.MagazineForceCargo;
 import frc.robot.commands.MagazineSpitCargo;
 import frc.robot.commands.ManualShoot;
+import frc.robot.commands.ManualTurretControl;
 import frc.robot.commands.ResetHoodAngle;
 import frc.robot.commands.autonomous.BackShoot;
 import frc.robot.commands.autonomous.FiveBallRight;
 import frc.robot.commands.autonomous.MiddleStealDelay;
 import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.ThreeBallRight;
+import frc.robot.commands.autonomous.TurretTest;
 import frc.robot.commands.autonomous.TwoBallStealLeft;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -37,6 +40,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -57,6 +61,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter();
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
+  private final Turret turret = new Turret(climber);
 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -75,19 +80,21 @@ public class RobotContainer {
 
   private void configureAutonomous() {
     m_chooser.addOption("System Check",
-        new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight));
+        new SystemCheck(drivetrain, magazine, shooter, intake, climber, turret, limelight));
 
     // m_chooser.addOption("Five Ball Right",
     // new FiveBallRight(drivetrain, shooter, intake, magazine, climber,
     // limelight));
     m_chooser.addOption("Left 2 Ball Steal",
-        new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, limelight));
+        new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Middle Steal Delay",
-        new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, limelight));
+        new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Three Ball Right",
-        new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
+        new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.setDefaultOption("Drive Back Shoot",
-        new BackShoot(drivetrain, shooter, intake, magazine, climber, limelight));
+        new BackShoot(drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("Turret Test",
+        new TurretTest(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -178,11 +185,11 @@ public class RobotContainer {
 
     // Retract climber arms, also locks turret to forward position
     new Button(climber_joystick::getBButton).whenPressed(
-        new ClimberArmsIn(climber));
+        new ClimberArmsIn(climber, turret));
 
     // Extend climber arms, allows free rotation of turret
     new Button(climber_joystick::getXButton).whenPressed(
-        new ClimberArmsOut(climber));
+        new ClimberArmsOut(climber, turret));
 
     new Button(climber_joystick::getStartButton).whenPressed(
         new CalibrateClimber(climber));

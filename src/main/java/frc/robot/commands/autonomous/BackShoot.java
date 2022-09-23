@@ -26,6 +26,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 public class BackShoot extends AutoBaseCommand {
 
@@ -33,8 +34,8 @@ public class BackShoot extends AutoBaseCommand {
     PPSwerveControllerCommand stealCommand;
 
     public BackShoot(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-            Limelight limelight) {
-        super(drivetrain, shooter, intake, magazine, climber, limelight);
+            Turret turret, Limelight limelight) {
+        super(drivetrain, shooter, intake, magazine, climber, turret, limelight);
 
         addCommands(
                 new InstantCommand(() -> {

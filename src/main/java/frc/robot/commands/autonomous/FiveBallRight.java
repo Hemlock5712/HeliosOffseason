@@ -27,6 +27,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 /** Add your docs here. */
 public class FiveBallRight extends AutoBaseCommand {
@@ -35,8 +36,8 @@ public class FiveBallRight extends AutoBaseCommand {
 	PPSwerveControllerCommand shootLast2;
 
 	public FiveBallRight(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-			Limelight limelight) {
-		super(drivetrain, shooter, intake, magazine, climber, limelight);
+			Turret turret, Limelight limelight) {
+		super(drivetrain, shooter, intake, magazine, climber, turret, limelight);
 
 		addCommands(
 				new InstantCommand(() -> {

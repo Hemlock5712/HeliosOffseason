@@ -4,14 +4,20 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.util.ArmsOut;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Turret;
 
 public class ClimberArmsOut extends SequentialCommandGroup {
 
-  public ClimberArmsOut(Climber climber) {
+  public ClimberArmsOut(Climber climber, Turret turret) {
 
-    addCommands(new ArmsOut(climber));
+    addCommands(
+        new ArmsOut(climber),
+        new WaitCommand(1.5),
+        new InstantCommand(() -> turret.setActiveTargeting(true)));
   }
 }
