@@ -27,6 +27,7 @@ import frc.robot.commands.MagazineSpitCargo;
 import frc.robot.commands.ManualShoot;
 import frc.robot.commands.ManualTurretControl;
 import frc.robot.commands.ResetHoodAngle;
+import frc.robot.commands.TurretPassiveAim;
 import frc.robot.commands.autonomous.BackShoot;
 import frc.robot.commands.autonomous.FiveBallRight;
 import frc.robot.commands.autonomous.MiddleStealDelay;
@@ -124,6 +125,7 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> -modifyAxis(primary_joystick.getLeftX()),
         () -> modifyAxis(primary_joystick.getLeftY()), () -> modifyAxis(primary_joystick.getRightX())));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
+    turret.setDefaultCommand(new TurretPassiveAim(turret));
 
     /*
      * Primary Driver Commands

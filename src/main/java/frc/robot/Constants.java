@@ -98,11 +98,11 @@ public final class Constants {
 
         // Maximum front angle the turret can turn to with climber arms up.
         // Not used yet, will be using turret only if arms are down currently.
-        public static final double CLIMBER_ARM_LEFT_ANGLE = 2;
-        public static final double CLIMBER_ARM_RIGHT_ANGLE = 2;
+        public static final double CLIMBER_ARM_LEFT_ANGLE = 5;
+        public static final double CLIMBER_ARM_RIGHT_ANGLE = 5;
 
-        public static final Rotation2d TRAVEL_LEFT_LIMIT = Rotation2d.fromDegrees(-90);
-        public static final Rotation2d TRAVEL_RIGHT_LIMIT = Rotation2d.fromDegrees(270);
+        public static final Rotation2d TRAVEL_LEFT_LIMIT = Rotation2d.fromDegrees(-45);
+        public static final Rotation2d TRAVEL_RIGHT_LIMIT = Rotation2d.fromDegrees(315);
 
         public static final TreeMap<Double, Double> TIME_OF_FLIGHT = new TreeMap<>(
                 Map.ofEntries(

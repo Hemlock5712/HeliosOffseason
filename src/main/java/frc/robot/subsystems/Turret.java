@@ -53,13 +53,25 @@ public class Turret extends SubsystemBase {
 
   /**
    * Sets the target angle of the turret
-   * Angles below -45deg will be wrapped to the positive version of that angle, and vice versa,
+   * Angles below -45deg will be wrapped to the positive version of that angle,
+   * and vice versa,
    * preventing the turret from going past 45deg to the left
    * 
    * @param angle in degrees
    */
   public void setAngle(double angle) {
-    currentAngle = ((((angle + 45) % 360) - 45) / 360) * Constants.Turret.ENCODER_TICKS_PER_ROTATION * Constants.Turret.GEAR_RATIO;
+    if (!activeTargeting && isFront()) {
+      currentAngle = 0;
+    } else if (!activeTargeting && !isFront()) {
+      currentAngle = 180;
+    } else {
+      currentAngle = ((trueMod(angle + 45, 360) - 45) / 360) * Constants.Turret.ENCODER_TICKS_PER_ROTATION
+          * Constants.Turret.GEAR_RATIO;
+    }
+  }
+
+  private double trueMod(double n, double m) {
+    return (n < 0) ? (m - (Math.abs(n) % m)) % m : (n % m);
   }
 
   public double getTargetAngle() {
@@ -76,7 +88,7 @@ public class Turret extends SubsystemBase {
 
   public boolean isFront() {
     double angle = getTrueTurretAngle();
-    return angle < Constants.Turret.CLIMBER_ARM_RIGHT_ANGLE && angle > Constants.Turret.CLIMBER_ARM_LEFT_ANGLE;
+    return angle < Constants.Turret.CLIMBER_ARM_RIGHT_ANGLE && angle > -Constants.Turret.CLIMBER_ARM_LEFT_ANGLE;
   }
 
   public boolean isBack() {
@@ -99,20 +111,24 @@ public class Turret extends SubsystemBase {
     Rotation2d robotRotation = drivetrain.getPose2d().getRotation();
     Translation2d robotPosition = drivetrain.getPose2d().getTranslation();
     Translation2d hubPosition = fakeHubLocation();
-    Rotation2d hubAngleRotation = new Rotation2d(robotPosition.getX() - hubPosition.getX(), robotPosition.getY() - hubPosition.getY());
+    Rotation2d hubAngleRotation = new Rotation2d(robotPosition.getX() - hubPosition.getX(),
+        robotPosition.getY() - hubPosition.getY());
     return robotRotation.rotateBy(hubAngleRotation).getDegrees();
   }
 
   public Translation2d fakeHubLocation() {
     Translation2d hubLocation = getHubLocation();
     Translation2d fakeRobot = fakeRobotLocation();
-    double time = Constants.Turret.TIME_OF_FLIGHT.get(hubLocation.getDistance(drivetrain.getPose2d().getTranslation()));
+    double time = Constants.Turret.TIME_OF_FLIGHT
+        .floorKey(hubLocation.getDistance(drivetrain.getPose2d().getTranslation()));
     return hubLocation.minus(fakeRobot.times(time));
   }
 
   private Translation2d fakeRobotLocation() {
     ChassisSpeeds speeds = drivetrain.getFieldRelativeSpeeds();
-    Translation2d translation = new Translation2d(Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2)), new Rotation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond));
+    Translation2d translation = new Translation2d(
+        Math.sqrt(Math.pow(speeds.vxMetersPerSecond, 2) + Math.pow(speeds.vyMetersPerSecond, 2)),
+        new Rotation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond));
     return translation;
   }
 
