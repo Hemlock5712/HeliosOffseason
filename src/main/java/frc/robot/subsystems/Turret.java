@@ -22,6 +22,8 @@ public class Turret extends SubsystemBase {
   TalonFX rotationMotor = new TalonFX(Constants.Turret.MOTOR_ID);
   double currentAngle = 0;
   boolean activeTargeting = false;
+  boolean limelightTargeting = false;
+  final double leftAngle = 90;
 
   public boolean isActiveTargeting() {
     return activeTargeting;
@@ -53,9 +55,9 @@ public class Turret extends SubsystemBase {
 
   /**
    * Sets the target angle of the turret
-   * Angles below -45deg will be wrapped to the positive version of that angle,
+   * Angles below -90deg will be wrapped to the positive version of that angle,
    * and vice versa,
-   * preventing the turret from going past 45deg to the left
+   * preventing the turret from going past 90deg to the left
    * 
    * @param angle in degrees
    */
@@ -65,7 +67,7 @@ public class Turret extends SubsystemBase {
     } else if (!activeTargeting && !isFront()) {
       currentAngle = 180;
     } else {
-      currentAngle = ((trueMod(angle + 45, 360) - 45) / 360) * Constants.Turret.ENCODER_TICKS_PER_ROTATION
+      currentAngle = ((trueMod(angle + leftAngle, 360) - leftAngle) / 360) * Constants.Turret.ENCODER_TICKS_PER_ROTATION
           * Constants.Turret.GEAR_RATIO;
     }
   }
@@ -107,13 +109,22 @@ public class Turret extends SubsystemBase {
     return Constants.Field.HUB_LOCATION;
   }
 
+  public double getAngleToHub() {
+    Rotation2d robotRotation = drivetrain.getPose2d().getRotation();
+    Translation2d robotPosition = drivetrain.getPose2d().getTranslation();
+    Translation2d hubPosition = getHubLocation();
+    Rotation2d hubAngleRotation = new Rotation2d(hubPosition.getX() - robotPosition.getX(),
+        hubPosition.getY() - robotPosition.getY());
+    return robotRotation.rotateBy(hubAngleRotation.times(-1)).getDegrees();
+  }
+
   public double getAngleToFakeHub() {
     Rotation2d robotRotation = drivetrain.getPose2d().getRotation();
     Translation2d robotPosition = drivetrain.getPose2d().getTranslation();
     Translation2d hubPosition = fakeHubLocation();
-    Rotation2d hubAngleRotation = new Rotation2d(robotPosition.getX() - hubPosition.getX(),
-        robotPosition.getY() - hubPosition.getY());
-    return robotRotation.rotateBy(hubAngleRotation).getDegrees();
+    Rotation2d hubAngleRotation = new Rotation2d(hubPosition.getX() - robotPosition.getX(),
+        hubPosition.getY() - robotPosition.getY());
+    return robotRotation.rotateBy(hubAngleRotation.times(-1)).getDegrees();
   }
 
   public Translation2d fakeHubLocation() {
@@ -132,6 +143,10 @@ public class Turret extends SubsystemBase {
     return translation;
   }
 
+  public void setLimelightTargeting(boolean isUsingLimelight) {
+    limelightTargeting = isUsingLimelight;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -140,5 +155,6 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putNumber("Turret/currentAngle", getTrueTurretAngle());
     SmartDashboard.putBoolean("Turret/isBack", isBack());
     SmartDashboard.putBoolean("Turret/isFront", isFront());
+    SmartDashboard.putBoolean("Turret/limelightTargeting", limelightTargeting);
   }
 }

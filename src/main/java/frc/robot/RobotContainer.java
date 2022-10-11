@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -92,6 +95,8 @@ public class RobotContainer {
         new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Three Ball Right",
         new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("Five Ball Right",
+        new FiveBallRight(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.setDefaultOption("Drive Back Shoot",
         new BackShoot(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Turret Test",
@@ -125,7 +130,7 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> -modifyAxis(primary_joystick.getLeftX()),
         () -> modifyAxis(primary_joystick.getLeftY()), () -> modifyAxis(primary_joystick.getRightX())));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
-    turret.setDefaultCommand(new TurretPassiveAim(turret));
+    turret.setDefaultCommand(new TurretPassiveAim(turret, limelight));
 
     /*
      * Primary Driver Commands
@@ -147,6 +152,12 @@ public class RobotContainer {
 
     new Button(primary_joystick::getLeftBumper).whileHeld(
         new MagazineSpitCargo(magazine));
+
+    new Button(primary_joystick::getStartButton).whenPressed(new InstantCommand(() -> {
+      if (!DriverStation.isFMSAttached()) {
+        drivetrain.resetOdometry(new Pose2d(.5, 4.5, Rotation2d.fromDegrees(0)));
+      }
+    }));
     // new LimelightShoot(shooter, magazine, limelight)).whenReleased(new
     // InstantCommand(() -> {
     // shooter.runMotor(0);
