@@ -41,7 +41,7 @@ public class Turret extends SubsystemBase {
     // Set PID parameters
     rotationMotor.config_kP(0, Constants.Turret.kP);
     rotationMotor.config_kI(0, Constants.Turret.kI);
-    rotationMotor.config_IntegralZone(0, 10000);
+    rotationMotor.config_IntegralZone(0, 5000);
     rotationMotor.config_kD(0, Constants.Turret.kD);
     rotationMotor.config_kF(0, Constants.Turret.kF);
     rotationMotor.configClosedLoopPeakOutput(0, .9);
