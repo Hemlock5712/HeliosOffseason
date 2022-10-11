@@ -18,6 +18,7 @@ public class ResetHoodAngle extends SequentialCommandGroup {
         new WaitForHoodLimitSwitch(shooter).raceWith(new RawHoodInput(shooter, () -> 0.05)),
         new InstantCommand(() -> {
           shooter.zeroHoodEncoder();
+          shooter.runMotor(0);
         }));
   }
 }

@@ -130,7 +130,7 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> -modifyAxis(primary_joystick.getLeftX()),
         () -> modifyAxis(primary_joystick.getLeftY()), () -> modifyAxis(primary_joystick.getRightX())));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
-    turret.setDefaultCommand(new TurretPassiveAim(turret, limelight));
+    turret.setDefaultCommand(new TurretPassiveAim(turret, limelight, drivetrain));
 
     /*
      * Primary Driver Commands

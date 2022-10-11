@@ -106,6 +106,7 @@ public final class Constants {
 
         public static final TreeMap<Double, Double> TIME_OF_FLIGHT = new TreeMap<>(
                 Map.ofEntries(
+                        entry(0.0, 0.8),
                         entry(2.5, 1.0),
                         entry(3.0, 1.05),
                         entry(3.5, 1.10),

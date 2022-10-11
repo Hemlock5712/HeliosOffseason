@@ -32,6 +32,7 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
   private final Pigeon2 m_pigeon = new Pigeon2(Constants.Drivetrain.PIGEON_ID);
 
   private double gyroOffset = 0;
+  private double lastAngle = 0;
   private final SwerveDriveOdometry m_odemetry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(0));
 
   private final SwerveModule m_frontLeftModule;
@@ -160,6 +161,13 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
 
   public PIDController getLimelightPID() {
     return limelightPIDController;
+  }
+
+  public double robotRotationSpeed() {
+    Rotation2d angleDifference = getGyroscopeRotation().minus(Rotation2d.fromDegrees(lastAngle));
+    Rotation2d angleRate = angleDifference.times(50);
+    lastAngle = getGyroscopeRotation().getDegrees();
+    return angleRate.getDegrees();
   }
 
   @Override
