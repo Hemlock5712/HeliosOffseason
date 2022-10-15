@@ -48,11 +48,18 @@ public class FiveBallRight extends AutoBaseCommand {
 						new MagazineAutoBump(magazine)),
 				new LimelightAim(drivetrain, limelight).withTimeout(1.5),
 				new InstantCommand(() -> drivetrain.stopModules()),
-				new ManualShoot(shooter, magazine, () -> 7000, () -> -5),
+				new ParallelDeadlineGroup(new SequentialCommandGroup(
+						new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1),
+						new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1),
+						new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1)),
+						new IntakeCargo(intake, magazine)),
 				new ParallelDeadlineGroup(last2Cargo, new IntakeCargo(intake, magazine),
 						new MagazineAutoBump(magazine)),
 				new ParallelDeadlineGroup(shootLast2, new IntakeCargo(intake, magazine),
-						new MagazineAutoBump(magazine)));
+						new MagazineAutoBump(magazine)),
+				new InstantCommand(() -> drivetrain.stopModules()),
+				new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1),
+				new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1));
 	}
 
 	protected void generatePaths() {

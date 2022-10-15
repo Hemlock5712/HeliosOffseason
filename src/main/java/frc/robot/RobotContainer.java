@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -14,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.CalibrateClimber;
 import frc.robot.commands.ClimberArmsIn;
 import frc.robot.commands.ClimberArmsOut;
@@ -23,12 +21,9 @@ import frc.robot.commands.ClimberUp;
 import frc.robot.commands.FieldDrive;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.LimelightAim;
-import frc.robot.commands.LimelightShoot;
 import frc.robot.commands.MagazineAutoBump;
-import frc.robot.commands.MagazineForceCargo;
 import frc.robot.commands.MagazineSpitCargo;
 import frc.robot.commands.ManualShoot;
-import frc.robot.commands.ManualTurretControl;
 import frc.robot.commands.ResetHoodAngle;
 import frc.robot.commands.TurretPassiveAim;
 import frc.robot.commands.autonomous.BackShoot;
@@ -38,6 +33,7 @@ import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.ThreeBallRight;
 import frc.robot.commands.autonomous.TurretTest;
 import frc.robot.commands.autonomous.TwoBallStealLeft;
+import frc.robot.commands.autonomous.TwoBallTwoSteal;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -101,6 +97,8 @@ public class RobotContainer {
         new BackShoot(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Turret Test",
         new TurretTest(drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("2 Ball 2 Steal (Turret)",
+        new TwoBallTwoSteal(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -154,10 +152,18 @@ public class RobotContainer {
         new MagazineSpitCargo(magazine));
 
     new Button(primary_joystick::getStartButton).whenPressed(new InstantCommand(() -> {
-      if (!DriverStation.isFMSAttached()) {
-        drivetrain.resetOdometry(new Pose2d(.5, 4.5, Rotation2d.fromDegrees(0)));
-      }
+      drivetrain.resetOdometry(new Pose2d(.5, 4.5, Rotation2d.fromDegrees(0)));
     }));
+
+    new Button(primary_joystick::getBackButton).whenPressed(new InstantCommand(() -> {
+      // TODO: Disable turret, lock to 0deg
+    }));
+
+    // new Button(primary_joystick::getYButton).and(new
+    // Button(primary_joystick::getXButton))
+    // .whileActiveOnce(new TurretCalibrate(climber, turret))
+    // .whenInactive(new ManualTurretControl(turret, () -> 0));
+
     // new LimelightShoot(shooter, magazine, limelight)).whenReleased(new
     // InstantCommand(() -> {
     // shooter.runMotor(0);

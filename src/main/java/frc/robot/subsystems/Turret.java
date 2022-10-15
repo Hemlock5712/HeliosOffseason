@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -24,6 +25,13 @@ public class Turret extends SubsystemBase {
   boolean activeTargeting = false;
   boolean limelightTargeting = false;
   final double leftAngle = 90;
+  boolean haveArmsGoneDownBefore = false;
+
+  DigitalInput centerMagnet = new DigitalInput(0);
+
+  public boolean isMagnetTriggered() {
+    return !centerMagnet.get();
+  }
 
   public boolean isActiveTargeting() {
     return activeTargeting;
@@ -62,14 +70,19 @@ public class Turret extends SubsystemBase {
    * @param angle in degrees
    */
   public void setAngle(double angle) {
-    if (!activeTargeting && isFront()) {
-      currentAngle = 0;
-    } else if (!activeTargeting && !isFront()) {
-      currentAngle = 180;
-    } else {
-      currentAngle = ((trueMod(angle + leftAngle, 360) - leftAngle) / 360) * Constants.Turret.ENCODER_TICKS_PER_ROTATION
-          * Constants.Turret.GEAR_RATIO;
+    if (!activeTargeting) {
+      if (haveArmsGoneDownBefore) {
+        angle = 180;
+      } else {
+        angle = 0;
+      }
     }
+    currentAngle = ((trueMod(angle + leftAngle, 360) - leftAngle) / 360) * Constants.Turret.ENCODER_TICKS_PER_ROTATION
+        * Constants.Turret.GEAR_RATIO;
+  }
+
+  public void resetTurretAngle(double angle) {
+    rotationMotor.setSelectedSensorPosition(angle);
   }
 
   private double trueMod(double n, double m) {
@@ -147,6 +160,14 @@ public class Turret extends SubsystemBase {
     limelightTargeting = isUsingLimelight;
   }
 
+  public boolean haveArmsGoneDownBefore() {
+    return haveArmsGoneDownBefore;
+  }
+
+  public void setHaveArmsGoneDownBefore(boolean haveArmsGoneDownBefore) {
+    this.haveArmsGoneDownBefore = haveArmsGoneDownBefore;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -156,5 +177,6 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putBoolean("Turret/isBack", isBack());
     SmartDashboard.putBoolean("Turret/isFront", isFront());
     SmartDashboard.putBoolean("Turret/limelightTargeting", limelightTargeting);
+    SmartDashboard.putBoolean("Turret/hallEffect", isMagnetTriggered());
   }
 }

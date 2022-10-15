@@ -18,6 +18,9 @@ public class ClimberArmsOut extends SequentialCommandGroup {
     addCommands(
         new ArmsOut(climber),
         new WaitCommand(1.5),
-        new InstantCommand(() -> turret.setActiveTargeting(true)));
+        new InstantCommand(() -> {
+          turret.setHaveArmsGoneDownBefore(true);
+          turret.setActiveTargeting(true);
+        }));
   }
 }

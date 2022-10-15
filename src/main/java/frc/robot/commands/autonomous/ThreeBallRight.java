@@ -31,56 +31,61 @@ import frc.robot.subsystems.Turret;
 
 /** Add your docs here. */
 public class ThreeBallRight extends AutoBaseCommand {
-        PPSwerveControllerCommand first3Cargo;
+	PPSwerveControllerCommand first2Cargo;
+	PPSwerveControllerCommand lastCargo;
 
-        public ThreeBallRight(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-                        Turret turret, Limelight limelight) {
-                super(drivetrain, shooter, intake, magazine, climber, turret, limelight);
+	public ThreeBallRight(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
+			Turret turret, Limelight limelight) {
+		super(drivetrain, shooter, intake, magazine, climber, turret, limelight);
 
-                addCommands(
-                                new InstantCommand(() -> {
-                                        drivetrain.setGyroscope(90);
-                                        drivetrain.resetOdometry(new Pose2d(7.59, 1.75, Rotation2d.fromDegrees(90)));
-                                }),
-                                new ParallelDeadlineGroup(
-                                                new SequentialCommandGroup(
-                                                                first3Cargo,
-                                                                new PrintCommand("Made it to location A"),
-                                                                new InstantCommand(() -> drivetrain.stopModules()),
-                                                                new PrintCommand("Aiming!"),
-                                                                new LimelightAim(drivetrain, limelight)
-                                                                                .withTimeout(1.5),
-                                                                new InstantCommand(() -> drivetrain.stopModules()),
-                                                                new PrintCommand("Aimed!")),
-                                                new IntakeCargo(intake, magazine),
-                                                new MagazineAutoBump(magazine)),
-                                new ParallelDeadlineGroup(
-                                                new SequentialCommandGroup(
-                                                                new PrintCommand("Shooting 1!"),
-                                                                new ManualShoot(shooter, magazine, () -> 6700, () -> -5)
-                                                                                .withTimeout(1.5),
-                                                                new PrintCommand("Shooting 2!"),
-                                                                new ManualShoot(shooter, magazine, () -> 6700, () -> -5)
-                                                                                .withTimeout(1.5),
-                                                                new PrintCommand("Shooting 3!"),
-                                                                new ManualShoot(shooter, magazine, () -> 6700, () -> -5)
-                                                                                .withTimeout(1.5)),
-                                                new IntakeCargo(intake, magazine)));
+		addCommands(
+				new InstantCommand(() -> {
+					drivetrain.setGyroscope(90);
+					drivetrain.resetOdometry(new Pose2d(7.66, 1.86, Rotation2d.fromDegrees(90)));
+				}),
+				new ParallelDeadlineGroup(
+						new SequentialCommandGroup(
+								first2Cargo,
+								new InstantCommand(() -> drivetrain.stopModules()),
+								new LimelightAim(drivetrain, limelight)
+										.withTimeout(1),
+								new InstantCommand(() -> drivetrain.stopModules())),
+						new IntakeCargo(intake, magazine),
+						new MagazineAutoBump(magazine)),
+				new ManualShoot(shooter, magazine, () -> 7000, () -> -7).withTimeout(1),
+				new ManualShoot(shooter, magazine, () -> 7000, () -> -7).withTimeout(1),
+				new ParallelDeadlineGroup(
+						new SequentialCommandGroup(lastCargo, new InstantCommand(() -> drivetrain.stopModules()),
+								new LimelightAim(drivetrain, limelight)
+										.withTimeout(1),
+								new InstantCommand(() -> drivetrain.stopModules())),
+						new IntakeCargo(intake, magazine), new MagazineAutoBump(magazine)),
+				new ManualShoot(shooter, magazine, () -> 7500, () -> -4.5).withTimeout(1));
+	}
 
-        }
+	protected void generatePaths() {
+		PathPlannerTrajectory m_first2Cargo = PathPlanner.loadPath("Five Ball A", 5, 3);
+		PathPlannerTrajectory m_lastCargo = PathPlanner.loadPath("Five Ball B", 5, 3);
 
-        protected void generatePaths() {
-                PathPlannerTrajectory m_first3Cargo = PathPlanner.loadPath("Five Ball A", 5, 3);
+		first2Cargo = new PPSwerveControllerCommand(
+				m_first2Cargo,
+				drivetrain::getPose2d,
+				drivetrain.getKinematics(),
+				m_translationController,
+				m_strafeController,
+				m_thetaController,
+				drivetrain::setAllStates,
+				drivetrain);
 
-                first3Cargo = new PPSwerveControllerCommand(
-                                m_first3Cargo,
-                                drivetrain::getPose2d,
-                                drivetrain.getKinematics(),
-                                m_translationController,
-                                m_strafeController,
-                                m_thetaController,
-                                drivetrain::setAllStates,
-                                drivetrain);
+		lastCargo = new PPSwerveControllerCommand(
+				m_lastCargo,
+				drivetrain::getPose2d,
+				drivetrain.getKinematics(),
+				m_translationController,
+				m_strafeController,
+				m_thetaController,
+				drivetrain::setAllStates,
+				drivetrain);
 
-        }
+	}
 }
