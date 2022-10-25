@@ -27,8 +27,12 @@ import frc.robot.commands.ManualShoot;
 import frc.robot.commands.ResetHoodAngle;
 import frc.robot.commands.TurretPassiveAim;
 import frc.robot.commands.autonomous.BackShoot;
+import frc.robot.commands.autonomous.BackShootMiddle;
+import frc.robot.commands.autonomous.FiveBallBeta;
 import frc.robot.commands.autonomous.FiveBallRight;
+import frc.robot.commands.autonomous.FourBallLeft;
 import frc.robot.commands.autonomous.MiddleStealDelay;
+import frc.robot.commands.autonomous.OneBallOneStealLeft;
 import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.ThreeBallRight;
 import frc.robot.commands.autonomous.TurretTest;
@@ -82,23 +86,35 @@ public class RobotContainer {
     m_chooser.addOption("System Check",
         new SystemCheck(drivetrain, magazine, shooter, intake, climber, turret, limelight));
 
-    // m_chooser.addOption("Five Ball Right",
-    // new FiveBallRight(drivetrain, shooter, intake, magazine, climber,
+    // m_chooser.addOption("Left 2 Ball Steal",
+    // new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, turret,
     // limelight));
-    m_chooser.addOption("Left 2 Ball Steal",
-        new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, turret, limelight));
-    m_chooser.addOption("Middle Steal Delay",
-        new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, turret, limelight));
-    m_chooser.addOption("Three Ball Right",
-        new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, turret, limelight));
-    m_chooser.addOption("Five Ball Right",
-        new FiveBallRight(drivetrain, shooter, intake, magazine, climber, turret, limelight));
-    m_chooser.setDefaultOption("Drive Back Shoot",
-        new BackShoot(drivetrain, shooter, intake, magazine, climber, turret, limelight));
-    m_chooser.addOption("Turret Test",
-        new TurretTest(drivetrain, shooter, intake, magazine, climber, turret, limelight));
-    m_chooser.addOption("2 Ball 2 Steal (Turret)",
-        new TwoBallTwoSteal(drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    // m_chooser.addOption("Middle Steal Delay",
+    // new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, turret,
+    // limelight));
+    // m_chooser.addOption("Three Ball Right",
+    // new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, turret,
+    // limelight));
+    // m_chooser.addOption("Five Ball Right",
+    // new FiveBallRight(drivetrain, shooter, intake, magazine, climber, turret,
+    // limelight));
+    // m_chooser.setDefaultOption("Drive Back Shoot",
+    // new BackShoot(drivetrain, shooter, intake, magazine, climber, turret,
+    // limelight));
+    // m_chooser.addOption("Turret Test",
+    // new TurretTest(drivetrain, shooter, intake, magazine, climber, turret,
+    // limelight));
+    // m_chooser.addOption("2 Ball 2 Steal (Turret)",
+    // new TwoBallTwoSteal(drivetrain, shooter, intake, magazine, climber, turret,
+    // limelight));
+    m_chooser.addOption("5 Ball Right",
+        new FiveBallBeta("Five Ball", drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("4 Ball Left",
+        new FourBallLeft("Four Ball Left", drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("1 Ball 1 Steal Left", new OneBallOneStealLeft("One Ball One Steal Left", drivetrain, shooter,
+        intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("Back Shoot Middle",
+        new BackShootMiddle("Back Shoot Middle", drivetrain, shooter, intake, magazine, climber, turret, limelight));
     SmartDashboard.putData(m_chooser);
   }
 
