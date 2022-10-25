@@ -185,6 +185,7 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
           // Reset odometry for the first path you run during auto
           if (isFirstPath) {
             this.resetOdometry(traj.getInitialHolonomicPose());
+            this.setGyroscope(traj.getInitialHolonomicPose().getRotation().getDegrees());
           }
         }),
         new PPSwerveControllerCommand(

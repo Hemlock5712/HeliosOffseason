@@ -1,0 +1,94 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 6.850080016265802,
+        "y": 5.7024961045114395
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.629440734843008,
+        "y": 6.234713412936442
+      },
+      "holonomicAngle": -64.29738834356695,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false
+    },
+    {
+      "anchorPoint": {
+        "x": 6.090732217522128,
+        "y": 7.244374590912644
+      },
+      "prevControl": {
+        "x": 6.455167231247924,
+        "y": 6.685203310310467
+      },
+      "nextControl": {
+        "x": 6.455167231247924,
+        "y": 6.685203310310467
+      },
+      "holonomicAngle": -55.28013847828463,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true
+    },
+    {
+      "anchorPoint": {
+        "x": 3.4133249216017667,
+        "y": 6.653736402424728
+      },
+      "prevControl": {
+        "x": 4.9220813173155875,
+        "y": 6.6446486857925136
+      },
+      "nextControl": {
+        "x": 2.458808108721987,
+        "y": 6.6594857588753635
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false
+    },
+    {
+      "anchorPoint": {
+        "x": 1.0152250713155273,
+        "y": 6.692312729577382
+      },
+      "prevControl": {
+        "x": 1.7682053032375298,
+        "y": 6.726623405169888
+      },
+      "nextControl": {
+        "x": 1.7682053032375298,
+        "y": 6.726623405169888
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true
+    },
+    {
+      "anchorPoint": {
+        "x": 2.4429201021863585,
+        "y": 6.669129840663527
+      },
+      "prevControl": {
+        "x": 2.024329859957797,
+        "y": 6.673024566001055
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false
+    }
+  ],
+  "markers": []
+}
