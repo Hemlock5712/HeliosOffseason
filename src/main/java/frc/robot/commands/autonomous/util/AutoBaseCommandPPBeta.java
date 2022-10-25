@@ -1,5 +1,11 @@
 package frc.robot.commands.autonomous.util;
 
+import java.util.ArrayList;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,7 +23,13 @@ import frc.robot.subsystems.Turret;
  * Requires all of the components, as well as setting up path
  * generation PID and generate methods.
  */
-public abstract class AutoBaseCommand extends SequentialCommandGroup {
+public abstract class AutoBaseCommandPPBeta extends SequentialCommandGroup {
+
+  protected ArrayList<PathPlannerTrajectory> trajectories;
+
+  private String pathName;
+  private PathConstraints constraint;
+  private PathConstraints[] constraints;
 
   protected Drivetrain drivetrain;
   protected Shooter shooter;
@@ -33,16 +45,57 @@ public abstract class AutoBaseCommand extends SequentialCommandGroup {
 
   private boolean pathHasBeenGenerated = false;
 
-  public AutoBaseCommand(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-      Turret turret, Limelight limelight) {
+  /**
+   * Base autonomous command for ease of generating paths.
+   * 
+   * @param pathName
+   * @param drivetrain
+   * @param shooter
+   * @param intake
+   * @param magazine
+   * @param climber
+   * @param turret
+   * @param limelight
+   * @param constraint
+   * @param constraints
+   */
+  public AutoBaseCommandPPBeta(String pathName, Drivetrain drivetrain, Shooter shooter, Intake intake,
+      Magazine magazine,
+      Climber climber,
+      Turret turret, Limelight limelight, PathConstraints constraint, PathConstraints... constraints) {
+    this.pathName = pathName;
     this.drivetrain = drivetrain;
     this.shooter = shooter;
     this.intake = intake;
     this.magazine = magazine;
     this.limelight = limelight;
     this.turret = turret;
+    this.constraint = constraint;
+    this.constraints = constraints;
 
     generate();
+  }
+
+  /**
+   * Base autonomous command for ease of generating paths.
+   * 
+   * If no path constraints are entered, it is implied that
+   * all paths will use 4 m/s velocity and 3 m/s^2 acceleration
+   * 
+   * @param pathName
+   * @param drivetrain
+   * @param shooter
+   * @param intake
+   * @param magazine
+   * @param climber
+   * @param turret
+   * @param limelight
+   */
+  public AutoBaseCommandPPBeta(String pathName, Drivetrain drivetrain, Shooter shooter, Intake intake,
+      Magazine magazine,
+      Climber climber,
+      Turret turret, Limelight limelight) {
+    this(pathName, drivetrain, shooter, intake, magazine, climber, turret, limelight, new PathConstraints(4, 3));
   }
 
   /**
@@ -58,7 +111,9 @@ public abstract class AutoBaseCommand extends SequentialCommandGroup {
    * Load and generate trajectories in this method. It is automatically called
    * upon creation of the command.
    */
-  protected abstract void generatePaths();
+  protected void generatePaths() {
+    trajectories = PathPlanner.loadPathGroup(pathName, constraint, constraints);
+  }
 
   /**
    * Generate the paths for the autonomous routine. If they have already

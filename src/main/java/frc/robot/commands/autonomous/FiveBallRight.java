@@ -27,6 +27,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 /** Add your docs here. */
 public class FiveBallRight extends AutoBaseCommand {
@@ -35,8 +36,8 @@ public class FiveBallRight extends AutoBaseCommand {
 	PPSwerveControllerCommand shootLast2;
 
 	public FiveBallRight(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-			Limelight limelight) {
-		super(drivetrain, shooter, intake, magazine, climber, limelight);
+			Turret turret, Limelight limelight) {
+		super(drivetrain, shooter, intake, magazine, climber, turret, limelight);
 
 		addCommands(
 				new InstantCommand(() -> {
@@ -47,11 +48,18 @@ public class FiveBallRight extends AutoBaseCommand {
 						new MagazineAutoBump(magazine)),
 				new LimelightAim(drivetrain, limelight).withTimeout(1.5),
 				new InstantCommand(() -> drivetrain.stopModules()),
-				new ManualShoot(shooter, magazine, () -> 7000, () -> -5),
+				new ParallelDeadlineGroup(new SequentialCommandGroup(
+						new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1),
+						new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1),
+						new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1)),
+						new IntakeCargo(intake, magazine)),
 				new ParallelDeadlineGroup(last2Cargo, new IntakeCargo(intake, magazine),
 						new MagazineAutoBump(magazine)),
 				new ParallelDeadlineGroup(shootLast2, new IntakeCargo(intake, magazine),
-						new MagazineAutoBump(magazine)));
+						new MagazineAutoBump(magazine)),
+				new InstantCommand(() -> drivetrain.stopModules()),
+				new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1),
+				new ManualShoot(shooter, magazine, () -> 7000, () -> -5).withTimeout(1));
 	}
 
 	protected void generatePaths() {

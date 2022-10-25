@@ -12,6 +12,7 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -43,7 +44,8 @@ public final class Constants {
         public static final double MAX_ANG_ACCEL = MAX_VELOCITY_METERS
                 / Math.hypot(Constants.Drivetrain.TRACKWIDTH_METERS / 2.0, Constants.Drivetrain.WHEELBASE_METERS / 2.0);
     }
-//Intake is Front
+
+    // Intake is Front
     public static final class Drivetrain {
         public static final int PIGEON_ID = 13;
         public static final double WHEELBASE_METERS = 0.749;
@@ -78,29 +80,35 @@ public final class Constants {
         public static final double kI = 0.01;
         public static final double kD = 0.01;
         public static final double kF = 0.0639;
+
+        public static final double AIMED_REGION = 0.5; // Region where the shooter is considered aimed enough
     }
 
     public static final class Turret {
         public static final int MOTOR_ID = 22;
 
-        public static final double kP = .25;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kF = 0;
+        public static final double kP = 0.012;
+        public static final double kI = 0.00003;
+        public static final double kD = 0.004;
+        public static final double kF = 0.000;
 
-        public static final int ENCODER_COUNTS_PER_REV = 42;
-        public static final int GEAR_RATIO = 4; // TODO: CHANGE THIS TO ACTUAL GEAR RATIO
+        public static final int ENCODER_TICKS_PER_ROTATION = 2048;
+        public static final int GEAR_RATIO = 6 * 9;
 
         public static final double CLIMBER_POLE_DEADZONE_CENTER = 45;
         public static final double CLIMBER_POLE_DEADZONE_WIDTH = 8;
 
         // Maximum front angle the turret can turn to with climber arms up.
         // Not used yet, will be using turret only if arms are down currently.
-        public static final double CLIMBER_ARM_LEFT_ANGLE = 2;
-        public static final double CLIMBER_ARM_RIGHT_ANGLE = 2;
+        public static final double CLIMBER_ARM_LEFT_ANGLE = 5;
+        public static final double CLIMBER_ARM_RIGHT_ANGLE = 5;
+
+        public static final Rotation2d TRAVEL_LEFT_LIMIT = Rotation2d.fromDegrees(-45);
+        public static final Rotation2d TRAVEL_RIGHT_LIMIT = Rotation2d.fromDegrees(315);
 
         public static final TreeMap<Double, Double> TIME_OF_FLIGHT = new TreeMap<>(
                 Map.ofEntries(
+                        entry(0.0, 0.8),
                         entry(2.5, 1.0),
                         entry(3.0, 1.05),
                         entry(3.5, 1.10),
@@ -121,17 +129,13 @@ public final class Constants {
     }
 
     public static final class Auto {
-        private static final double MAX_ANG_VEL_RAD_AUTO = .4 * Math.PI; // .25
-
-        public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(
-                MAX_ANG_VEL_RAD_AUTO, Constants.Swerve.MAX_ANG_ACCEL);
+        // private static final double MAX_ANG_VEL_RAD_AUTO = .4 * Math.PI; // .25
 
         public static final PIDController X_PID_CONTROLLER = new PIDController(5, 0, 0); // 5
         // y distance PID controller
         public static final PIDController Y_PID_CONTROLLER = new PIDController(5, 0, 0); // 5, 0, .0 0.3, 0.4, 4
         // ROTATION (angle) PID controller
-        public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(-3, 0, 0, // .85 works
-                ROT_PROFILE);
+        public static final PIDController ROT_PID_CONTROLLER = new PIDController(-3, 0, 0);
         public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(Constants.Swerve.MAX_VELOCITY_METERS, 4);
     }
 

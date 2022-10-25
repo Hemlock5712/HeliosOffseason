@@ -34,6 +34,7 @@ public class Intake extends SubsystemBase implements AutoCloseable {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Intake/Speed", intakeMotor.get());
+    SmartDashboard.putBoolean("Intake/IsRunning", intakeMotor.get() != 0);
     SmartDashboard.putBoolean("Intake/ArmDown", intakeSolenoid.get());
     SmartDashboard.putData(this);
   }

@@ -5,7 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.ctre.phoenix.sensors.Pigeon2Configuration;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
@@ -17,8 +18,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -32,6 +37,7 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
   private final Pigeon2 m_pigeon = new Pigeon2(Constants.Drivetrain.PIGEON_ID);
 
   private double gyroOffset = 0;
+  private double lastAngle = 0;
   private final SwerveDriveOdometry m_odemetry = new SwerveDriveOdometry(m_kinematics, new Rotation2d(0));
 
   private final SwerveModule m_frontLeftModule;
@@ -160,6 +166,36 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
 
   public PIDController getLimelightPID() {
     return limelightPIDController;
+  }
+
+  public double robotRotationSpeed() {
+    Rotation2d angleDifference = getGyroscopeRotation().minus(Rotation2d.fromDegrees(lastAngle));
+    Rotation2d angleRate = angleDifference.times(50);
+    lastAngle = getGyroscopeRotation().getDegrees();
+    return angleRate.getDegrees();
+  }
+
+  public Command followTrajectory(PathPlannerTrajectory traj) {
+    return followTrajectory(traj, false);
+  }
+
+  public Command followTrajectory(PathPlannerTrajectory traj, boolean isFirstPath) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          // Reset odometry for the first path you run during auto
+          if (isFirstPath) {
+            this.resetOdometry(traj.getInitialHolonomicPose());
+          }
+        }),
+        new PPSwerveControllerCommand(
+            traj,
+            this::getPose2d,
+            this.getKinematics(),
+            Constants.Auto.X_PID_CONTROLLER,
+            Constants.Auto.X_PID_CONTROLLER,
+            Constants.Auto.ROT_PID_CONTROLLER,
+            this::setAllStates,
+            this));
   }
 
   @Override

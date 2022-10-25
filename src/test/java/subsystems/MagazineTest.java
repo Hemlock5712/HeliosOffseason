@@ -25,8 +25,10 @@ public class MagazineTest {
     public void setup() {
         assert HAL.initialize(500, 0);
         magazine = new Magazine();
-        // REVPhysicsSim.getInstance().addSparkMax(magazine.lowerMagazine, DCMotor.getNeo550(1));
-        // REVPhysicsSim.getInstance().addSparkMax(magazine.upperMagazine, DCMotor.getNeo550(1));
+        // REVPhysicsSim.getInstance().addSparkMax(magazine.lowerMagazine,
+        // DCMotor.getNeo550(1));
+        // REVPhysicsSim.getInstance().addSparkMax(magazine.upperMagazine,
+        // DCMotor.getNeo550(1));
         simLowerSensor = new AnalogInputSim(Constants.Magazine.LOWER_SENSOR);
         simUpperSensor = new AnalogInputSim(Constants.Magazine.UPPER_SENSOR);
     }
@@ -71,13 +73,11 @@ public class MagazineTest {
         assertEquals(true, magazine.isFull());
     }
 
-    @Test
     public void runsUpperMagazine() {
         magazine.runUpperMagazine(0.5);
         assertEquals(0.5, magazine.upperMagazine.get(), 0.05);
     }
 
-    @Test
     public void runsLowerMagazine() {
         magazine.runLowerMagazine(0.5);
         assertEquals(0.5, magazine.lowerMagazine.get(), 0.05);

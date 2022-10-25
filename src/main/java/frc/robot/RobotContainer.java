@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,24 +21,26 @@ import frc.robot.commands.ClimberUp;
 import frc.robot.commands.FieldDrive;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.LimelightAim;
-import frc.robot.commands.LimelightShoot;
 import frc.robot.commands.MagazineAutoBump;
-import frc.robot.commands.MagazineForceCargo;
 import frc.robot.commands.MagazineSpitCargo;
 import frc.robot.commands.ManualShoot;
 import frc.robot.commands.ResetHoodAngle;
+import frc.robot.commands.TurretPassiveAim;
 import frc.robot.commands.autonomous.BackShoot;
 import frc.robot.commands.autonomous.FiveBallRight;
 import frc.robot.commands.autonomous.MiddleStealDelay;
 import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.ThreeBallRight;
+import frc.robot.commands.autonomous.TurretTest;
 import frc.robot.commands.autonomous.TwoBallStealLeft;
+import frc.robot.commands.autonomous.TwoBallTwoSteal;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -54,9 +58,10 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
   private final Magazine magazine = new Magazine();
-  private final Shooter shooter = new Shooter();
+  private final Shooter shooter = new Shooter(magazine);
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
+  private final Turret turret = new Turret(climber, drivetrain);
 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -75,19 +80,25 @@ public class RobotContainer {
 
   private void configureAutonomous() {
     m_chooser.addOption("System Check",
-        new SystemCheck(drivetrain, magazine, shooter, intake, climber, limelight));
+        new SystemCheck(drivetrain, magazine, shooter, intake, climber, turret, limelight));
 
     // m_chooser.addOption("Five Ball Right",
     // new FiveBallRight(drivetrain, shooter, intake, magazine, climber,
     // limelight));
     m_chooser.addOption("Left 2 Ball Steal",
-        new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, limelight));
+        new TwoBallStealLeft(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Middle Steal Delay",
-        new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, limelight));
+        new MiddleStealDelay(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Three Ball Right",
-        new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, limelight));
+        new ThreeBallRight(drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("Five Ball Right",
+        new FiveBallRight(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.setDefaultOption("Drive Back Shoot",
-        new BackShoot(drivetrain, shooter, intake, magazine, climber, limelight));
+        new BackShoot(drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("Turret Test",
+        new TurretTest(drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("2 Ball 2 Steal (Turret)",
+        new TwoBallTwoSteal(drivetrain, shooter, intake, magazine, climber, turret, limelight));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -117,6 +128,7 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> -modifyAxis(primary_joystick.getLeftX()),
         () -> modifyAxis(primary_joystick.getLeftY()), () -> modifyAxis(primary_joystick.getRightX())));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
+    turret.setDefaultCommand(new TurretPassiveAim(turret, limelight, drivetrain));
 
     /*
      * Primary Driver Commands
@@ -138,6 +150,20 @@ public class RobotContainer {
 
     new Button(primary_joystick::getLeftBumper).whileHeld(
         new MagazineSpitCargo(magazine));
+
+    new Button(primary_joystick::getStartButton).whenPressed(new InstantCommand(() -> {
+      drivetrain.resetOdometry(new Pose2d(.5, 4.5, Rotation2d.fromDegrees(0)));
+    }));
+
+    new Button(primary_joystick::getBackButton).whenPressed(new InstantCommand(() -> {
+      // TODO: Disable turret, lock to 0deg
+    }));
+
+    // new Button(primary_joystick::getYButton).and(new
+    // Button(primary_joystick::getXButton))
+    // .whileActiveOnce(new TurretCalibrate(climber, turret))
+    // .whenInactive(new ManualTurretControl(turret, () -> 0));
+
     // new LimelightShoot(shooter, magazine, limelight)).whenReleased(new
     // InstantCommand(() -> {
     // shooter.runMotor(0);
@@ -178,11 +204,11 @@ public class RobotContainer {
 
     // Retract climber arms, also locks turret to forward position
     new Button(climber_joystick::getBButton).whenPressed(
-        new ClimberArmsIn(climber));
+        new ClimberArmsIn(climber, turret));
 
     // Extend climber arms, allows free rotation of turret
     new Button(climber_joystick::getXButton).whenPressed(
-        new ClimberArmsOut(climber));
+        new ClimberArmsOut(climber, turret));
 
     new Button(climber_joystick::getStartButton).whenPressed(
         new CalibrateClimber(climber));

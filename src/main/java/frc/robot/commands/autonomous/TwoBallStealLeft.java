@@ -25,6 +25,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 public class TwoBallStealLeft extends AutoBaseCommand {
 
@@ -32,8 +33,8 @@ public class TwoBallStealLeft extends AutoBaseCommand {
   PPSwerveControllerCommand stealCommand;
 
   public TwoBallStealLeft(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-      Limelight limelight) {
-    super(drivetrain, shooter, intake, magazine, climber, limelight);
+      Turret turret, Limelight limelight) {
+    super(drivetrain, shooter, intake, magazine, climber, turret, limelight);
 
     addCommands(
         new InstantCommand(() -> {
@@ -46,11 +47,12 @@ public class TwoBallStealLeft extends AutoBaseCommand {
                 new InstantCommand(() -> drivetrain.stopModules()), // Stop
                 new LimelightAim(drivetrain, limelight).withTimeout(1.5)),
             new IntakeCargo(intake, magazine),
-            new MagazineAutoBump(magazine)
-           ), // Grab cargo
+            new MagazineAutoBump(magazine)), // Grab cargo
         new InstantCommand(() -> drivetrain.stopModules()),
-        // new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5), // Shoot cargo
-        // new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5), // Shoot second cargo
+        // new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5), // Shoot
+        // cargo
+        // new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5), // Shoot
+        // second cargo
         new ManualShoot(shooter, magazine, () -> 6800, () -> -3).withTimeout(1),
         new ManualShoot(shooter, magazine, () -> 6700, () -> -5).withTimeout(1),
         new ParallelDeadlineGroup(

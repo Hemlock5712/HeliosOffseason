@@ -22,6 +22,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 public class MiddleStealDelay extends AutoBaseCommand {
 
@@ -29,8 +30,8 @@ public class MiddleStealDelay extends AutoBaseCommand {
   PPSwerveControllerCommand stealCommand;
 
   public MiddleStealDelay(Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine, Climber climber,
-      Limelight limelight) {
-    super(drivetrain, shooter, intake, magazine, climber, limelight);
+      Turret turret, Limelight limelight) {
+    super(drivetrain, shooter, intake, magazine, climber, turret, limelight);
 
     addCommands(
         new InstantCommand(() -> {
@@ -42,26 +43,22 @@ public class MiddleStealDelay extends AutoBaseCommand {
             new SequentialCommandGroup(
                 driveBackCommand, // Drive to cargo
                 new InstantCommand(() -> drivetrain.stopModules()), // Stop
-                new LimelightAim(drivetrain, limelight).withTimeout(1)
-            ),
+                new LimelightAim(drivetrain, limelight).withTimeout(1)),
             new IntakeCargo(intake, magazine),
             new MagazineAutoBump(magazine)), // Grab cargo
         new InstantCommand(() -> drivetrain.stopModules()),
         // new LimelightShoot(shooter, magazine, limelight).withTimeout(1.5),
         new ManualShoot(shooter, magazine, () -> 7000, () -> -3).withTimeout(1.2),
         new ParallelDeadlineGroup(
-          new SequentialCommandGroup(
-            stealCommand,
-            new InstantCommand(() -> drivetrain.stopModules()),
-            new MagazineSpitCargo(magazine).withTimeout(2)
-          )
-        ),
+            new SequentialCommandGroup(
+                stealCommand,
+                new InstantCommand(() -> drivetrain.stopModules()),
+                new MagazineSpitCargo(magazine).withTimeout(2))),
         new InstantCommand(() -> {
           shooter.runMotor(0);
           intake.setIntakeDown(false);
         }),
-        new MagazineSpitCargo(magazine)
-    );
+        new MagazineSpitCargo(magazine));
   }
 
   protected void generatePaths() {
@@ -76,16 +73,16 @@ public class MiddleStealDelay extends AutoBaseCommand {
         m_thetaController,
         drivetrain::setAllStates,
         drivetrain);
-      PathPlannerTrajectory m_driveBack2 = PathPlanner.loadPath("Middle Steal Delayed B", 4, 2);
+    PathPlannerTrajectory m_driveBack2 = PathPlanner.loadPath("Middle Steal Delayed B", 4, 2);
 
-      stealCommand = new PPSwerveControllerCommand(
-          m_driveBack2,
-          drivetrain::getPose2d,
-          drivetrain.getKinematics(),
-          m_translationController,
-          m_strafeController,
-          m_thetaController,
-          drivetrain::setAllStates,
-          drivetrain);
+    stealCommand = new PPSwerveControllerCommand(
+        m_driveBack2,
+        drivetrain::getPose2d,
+        drivetrain.getKinematics(),
+        m_translationController,
+        m_strafeController,
+        m_thetaController,
+        drivetrain::setAllStates,
+        drivetrain);
   }
 }

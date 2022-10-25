@@ -16,8 +16,10 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.ManualShoot;
 
 public class Shooter extends SubsystemBase implements AutoCloseable {
   TalonFX leftShooter = new TalonFX(Constants.Shooter.LEFT_MOTOR_ID);
@@ -29,7 +31,10 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
 
   double hoodAngleTarget = 0;
 
-  public Shooter() {
+  Magazine magazine;
+
+  public Shooter(Magazine magazine) {
+    this.magazine = magazine;
     leftShooter.setNeutralMode(NeutralMode.Brake);
     rightShooter.setNeutralMode(NeutralMode.Brake);
 
@@ -39,7 +44,6 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     hood.getPIDController().setIZone(0.2);
     hood.getPIDController().setOutputRange(-.3, .3);
 
-    rightShooter.setInverted(true);
     rightShooter.follow(leftShooter, FollowerType.AuxOutput1);
 
     leftShooter.setNeutralMode(NeutralMode.Coast);
@@ -55,6 +59,9 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     rightShooter.config_kD(0, Constants.Shooter.kD, 30);
     rightShooter.config_kF(0, Constants.Shooter.kF, 30);
     rightShooter.config_IntegralZone(0, 50);
+
+    leftShooter.setInverted(true);
+    rightShooter.setInverted(true);
 
     runMotor(0);
   }
@@ -96,12 +103,30 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     hoodEncoder.setPosition(0);
   }
 
+  public Command shootCloseTarmac() {
+    return new ManualShoot(this, magazine, () -> 6700, () -> -5);
+  }
+
+  public Command shootFarTarmac() {
+    return new ManualShoot(this, magazine, () -> 7000, () -> -7);
+  }
+
+  public Command shootCloseSafeZone() {
+    return new ManualShoot(this, magazine, () -> 7500, () -> -4.5);
+  }
+
+  public Command shootFarSafeZone() {
+    return new ManualShoot(this, magazine, () -> 8500, () -> -20);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shooter/HoodAngle", getHoodPosition());
     SmartDashboard.putNumber("Shooter/SpeedError", leftShooter.getClosedLoopError());
     SmartDashboard.putNumber("Shooter/ShooterSpeed", leftShooter.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter/HoodSpeed", hood.get());
+    SmartDashboard.putBoolean("Shooter/HoodAtAngle", isHoodAtAngle());
+    SmartDashboard.putBoolean("Shooter/FlywheelAtSpeed", Math.abs(getShooterError()) < 200);
     SmartDashboard.putData(this);
   }
 
