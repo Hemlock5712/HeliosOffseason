@@ -58,7 +58,7 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final Intake intake = new Intake();
   private final Magazine magazine = new Magazine();
-  private final Shooter shooter = new Shooter();
+  private final Shooter shooter = new Shooter(magazine);
   private final Limelight limelight = new Limelight();
   private final Climber climber = new Climber();
   private final Turret turret = new Turret(climber, drivetrain);

@@ -80,6 +80,8 @@ public final class Constants {
         public static final double kI = 0.01;
         public static final double kD = 0.01;
         public static final double kF = 0.0639;
+
+        public static final double AIMED_REGION = 0.5; // Region where the shooter is considered aimed enough
     }
 
     public static final class Turret {
@@ -127,17 +129,13 @@ public final class Constants {
     }
 
     public static final class Auto {
-        private static final double MAX_ANG_VEL_RAD_AUTO = .4 * Math.PI; // .25
-
-        public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(
-                MAX_ANG_VEL_RAD_AUTO, Constants.Swerve.MAX_ANG_ACCEL);
+        // private static final double MAX_ANG_VEL_RAD_AUTO = .4 * Math.PI; // .25
 
         public static final PIDController X_PID_CONTROLLER = new PIDController(5, 0, 0); // 5
         // y distance PID controller
         public static final PIDController Y_PID_CONTROLLER = new PIDController(5, 0, 0); // 5, 0, .0 0.3, 0.4, 4
         // ROTATION (angle) PID controller
-        public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(-3, 0, 0, // .85 works
-                ROT_PROFILE);
+        public static final PIDController ROT_PID_CONTROLLER = new PIDController(-3, 0, 0);
         public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(Constants.Swerve.MAX_VELOCITY_METERS, 4);
     }
 
