@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 
@@ -21,7 +22,8 @@ public class LimelightAim extends CommandBase {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -31,18 +33,20 @@ public class LimelightAim extends CommandBase {
     double output = drivetrainPID.calculate(angleOffset, 0);
     m_drivetrain.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
-            0,0,
-           -output,
+            0, 0,
+            -output,
             m_drivetrain.getGyroscopeRotation()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_drivetrain.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrain.getGyroscopeRotation()));
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(m_limelight.getX()) < Constants.Shooter.AIMED_REGION;
   }
 }
