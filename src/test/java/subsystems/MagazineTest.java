@@ -1,19 +1,15 @@
 package subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.REVPhysicsSim;
-import edu.wpi.first.hal.HAL;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.AnalogInputSim;
-import edu.wpi.first.wpilibj.simulation.REVPHSim;
-import frc.robot.Constants;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Magazine;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import edu.wpi.first.hal.HAL;
+import edu.wpi.first.wpilibj.simulation.AnalogInputSim;
+import frc.robot.Constants;
+import frc.robot.subsystems.Magazine;
 
 public class MagazineTest {
     Magazine magazine;

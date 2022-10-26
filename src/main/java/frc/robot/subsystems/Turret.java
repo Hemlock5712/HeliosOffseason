@@ -114,8 +114,6 @@ public class Turret extends SubsystemBase {
   }
 
   public boolean canTurretRotatePastClimberArms() {
-    // TODO: Make this work the opposite way as well, allowing for reversed shooting
-    // with arms up
     return climber.areArmsDown();
   }
 

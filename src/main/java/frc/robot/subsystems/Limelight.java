@@ -65,11 +65,10 @@ public class Limelight extends SubsystemBase {
   }
 
   public double[] calcHoodAndRPM() {
-    // TODO: Change thor to ty. Safe zone shot was inconsistent with distance, jumping between around 150 and 170
     double arr[][] = {
         { Double.MIN_VALUE, 0, -25 },
         { -1, 18000, -40 },
-        {45, 15000, -35},
+        { 45, 15000, -35 },
         { 90, 15000, -35 },
         { 100, 12000, -18 },
         { 110, 11000, -17 },
@@ -117,9 +116,9 @@ public class Limelight extends SubsystemBase {
     // Increase first number to shoot farther decrease 2nd to have lower shot angle
     // return new double[] {6600, -7}; THESE WORK FOR ON THE LINE!!!!!
     // return new double[] {6800, -5};
-     //return new double[] {7500, -4.5};
-    return new double[] {output[0] - 1000, output[1] };
-    //return new double[] { arr[ans][1], arr[ans][2] };
+    // return new double[] {7500, -4.5};
+    return new double[] { output[0] - 1000, output[1] };
+    // return new double[] { arr[ans][1], arr[ans][2] };
   }
 
   @Override

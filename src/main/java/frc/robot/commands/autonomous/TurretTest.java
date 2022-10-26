@@ -4,7 +4,6 @@
 
 package frc.robot.commands.autonomous;
 
-import frc.robot.commands.ClimberArmsIn;
 import frc.robot.commands.ClimberArmsOut;
 import frc.robot.commands.ManualTurretControl;
 import frc.robot.commands.autonomous.util.AutoBaseCommand;
@@ -36,7 +35,6 @@ public class TurretTest extends AutoBaseCommand {
 
   @Override
   protected void generatePaths() {
-    // TODO Auto-generated method stub
 
   }
 }

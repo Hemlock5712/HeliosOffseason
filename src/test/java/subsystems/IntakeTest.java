@@ -1,19 +1,18 @@
 package subsystems;
 
+import static org.junit.Assert.assertEquals;
+
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.hal.HAL;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.REVPHSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.robot.subsystems.Intake;
-import com.revrobotics.REVPhysicsSim;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import edu.wpi.first.hal.HAL;
+import edu.wpi.first.wpilibj.simulation.REVPHSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
+import frc.robot.subsystems.Intake;
 
 public class IntakeTest {
     Intake intake;

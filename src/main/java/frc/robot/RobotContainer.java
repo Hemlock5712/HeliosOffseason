@@ -23,21 +23,13 @@ import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.LimelightAim;
 import frc.robot.commands.MagazineAutoBump;
 import frc.robot.commands.MagazineSpitCargo;
-import frc.robot.commands.ManualShoot;
 import frc.robot.commands.ResetHoodAngle;
 import frc.robot.commands.TurretPassiveAim;
-import frc.robot.commands.autonomous.BackShoot;
 import frc.robot.commands.autonomous.BackShootMiddle;
 import frc.robot.commands.autonomous.FiveBallBeta;
-import frc.robot.commands.autonomous.FiveBallRight;
 import frc.robot.commands.autonomous.FourBallLeft;
-import frc.robot.commands.autonomous.MiddleStealDelay;
 import frc.robot.commands.autonomous.OneBallOneStealLeft;
 import frc.robot.commands.autonomous.SystemCheck;
-import frc.robot.commands.autonomous.ThreeBallRight;
-import frc.robot.commands.autonomous.TurretTest;
-import frc.robot.commands.autonomous.TwoBallStealLeft;
-import frc.robot.commands.autonomous.TwoBallTwoSteal;
 import frc.robot.commands.autonomous.WackTwoBallTwoSteal;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
@@ -46,7 +38,6 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
-import com.pathplanner.lib.server.PathPlannerServer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -177,41 +168,26 @@ public class RobotContainer {
     }));
 
     new Button(primary_joystick::getBackButton).whenPressed(new InstantCommand(() -> {
-      // TODO: Disable turret, lock to 0deg
     }));
-
-    // new Button(primary_joystick::getYButton).and(new
-    // Button(primary_joystick::getXButton))
-    // .whileActiveOnce(new TurretCalibrate(climber, turret))
-    // .whenInactive(new ManualTurretControl(turret, () -> 0));
-
-    // new LimelightShoot(shooter, magazine, limelight)).whenReleased(new
-    // InstantCommand(() -> {
-    // shooter.runMotor(0);
-    // }));
 
     /*
      * Operator Commands
      */
-    // Shoot using limelight
-    // new Button(operator_joystick::getRightBumper).whileHeld(
-    // new LimelightShoot(shooter, magazine, limelight));
-
     // Close safe zone
     new Button(operator_joystick::getRightStickButton).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 7500, () -> -4.5));
+        shooter.shootCloseSafeZone());
     // Close Tarmac
     new Button(operator_joystick::getRightBumper).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 6700, () -> -5));
+        shooter.shootCloseTarmac());
     // Far tarmac
     new Button(operator_joystick::getBButton).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 7000, () -> -7));
+        shooter.shootFarTarmac());
     // Low Goal
     new Button(operator_joystick::getYButton).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 3000, () -> -5));
+        shooter.shootLowGoal());
     // Far safe zone
     new Button(operator_joystick::getXButton).whileHeld(
-        new ManualShoot(shooter, magazine, () -> 8500, () -> -20));
+        shooter.shootFarSafeZone());
 
     new Button(climber_joystick::getYButton).whileHeld(new ClimberUp(climber))
         .whenReleased(new InstantCommand(() -> climber.runLift(0)));
