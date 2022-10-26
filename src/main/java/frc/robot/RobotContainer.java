@@ -38,6 +38,7 @@ import frc.robot.commands.autonomous.ThreeBallRight;
 import frc.robot.commands.autonomous.TurretTest;
 import frc.robot.commands.autonomous.TwoBallStealLeft;
 import frc.robot.commands.autonomous.TwoBallTwoSteal;
+import frc.robot.commands.autonomous.WackTwoBallTwoSteal;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -117,6 +118,8 @@ public class RobotContainer {
         intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Back Shoot Middle",
         new BackShootMiddle("Back Shoot Middle", drivetrain, shooter, intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("Wack 2 Ball 2 Steal", new WackTwoBallTwoSteal("Wack 2 Ball 2 Steal", drivetrain, shooter,
+        intake, magazine, climber, turret, limelight));
     SmartDashboard.putData(m_chooser);
   }
 

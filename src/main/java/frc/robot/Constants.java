@@ -135,7 +135,7 @@ public final class Constants {
         // y distance PID controller
         public static final PIDController Y_PID_CONTROLLER = new PIDController(5, 0, 0); // 5, 0, .0 0.3, 0.4, 4
         // ROTATION (angle) PID controller
-        public static final PIDController ROT_PID_CONTROLLER = new PIDController(-3, 0, 0);
+        public static final PIDController ROT_PID_CONTROLLER = new PIDController(-5, 0, 0);
         public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(Constants.Swerve.MAX_VELOCITY_METERS, 4);
     }
 

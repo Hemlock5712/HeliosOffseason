@@ -119,6 +119,10 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     return new ManualShoot(this, magazine, () -> 8500, () -> -20);
   }
 
+  public Command shootLowGoal() {
+    return new ManualShoot(this, magazine, () -> 3000, () -> -5);
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shooter/HoodAngle", getHoodPosition());
