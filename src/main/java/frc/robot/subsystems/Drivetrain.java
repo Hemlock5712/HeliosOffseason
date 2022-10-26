@@ -196,7 +196,10 @@ public class Drivetrain extends SubsystemBase implements AutoCloseable {
             Constants.Auto.X_PID_CONTROLLER,
             Constants.Auto.ROT_PID_CONTROLLER,
             this::setAllStates,
-            this));
+            this),
+        new InstantCommand(() -> {
+          this.stopModules();
+        }));
   }
 
   @Override

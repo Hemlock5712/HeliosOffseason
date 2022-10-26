@@ -11,6 +11,7 @@ public class WaitForFullMagazine extends CommandBase {
   /** Creates a new WaitForNotFullMagazine. */
 
   Magazine magazine;
+
   public WaitForFullMagazine(Magazine magazine) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.magazine = magazine;
@@ -18,19 +19,22 @@ public class WaitForFullMagazine extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !magazine.isFull();
+    return magazine.isFull();
   }
 }

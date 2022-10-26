@@ -16,31 +16,31 @@ import frc.robot.subsystems.Turret;
 
 public class FiveBallBeta extends AutoBaseCommandPPBeta {
 
-    public FiveBallBeta(String pathName, Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine,
-            Climber climber, Turret turret, Limelight limelight) {
-        super(pathName, drivetrain, shooter, intake, magazine, climber, turret, limelight);
+	public FiveBallBeta(String pathName, Drivetrain drivetrain, Shooter shooter, Intake intake, Magazine magazine,
+			Climber climber, Turret turret, Limelight limelight) {
+		super(pathName, drivetrain, shooter, intake, magazine, climber, turret, limelight);
 
-        addCommands(
-                new ParallelDeadlineGroup(
-                        drivetrain.followTrajectory(trajectories.get(0), true),
-                        new IntakeWithMagazine(intake, magazine)),
-                new LimelightAim(drivetrain, limelight).withTimeout(0.5),
-                shooter.shootCloseTarmac().withTimeout(1),
-                shooter.shootCloseTarmac().withTimeout(1),
-                new ParallelDeadlineGroup(
-                        drivetrain.followTrajectory(trajectories.get(1)),
-                        new IntakeWithMagazine(intake, magazine)),
-                new LimelightAim(drivetrain, limelight).withTimeout(0.5),
-                shooter.shootFarTarmac().withTimeout(1),
-                new ParallelDeadlineGroup(
-                        new SequentialCommandGroup(
-                                drivetrain.followTrajectory(trajectories.get(2)),
-                                new WaitForFullMagazine(magazine).withTimeout(2)),
-                        new IntakeWithMagazine(intake, magazine)),
-                drivetrain.followTrajectory(trajectories.get(3)),
-                new LimelightAim(drivetrain, limelight).withTimeout(0.5),
-                shooter.shootFarTarmac().withTimeout(1),
-                shooter.shootFarTarmac().withTimeout(1));
-    }
+		addCommands(
+				new ParallelDeadlineGroup(
+						drivetrain.followTrajectory(trajectories.get(0), true),
+						new IntakeWithMagazine(intake, magazine)),
+				new LimelightAim(drivetrain, limelight).withTimeout(0.5),
+				shooter.shootCloseTarmac().withTimeout(1),
+				shooter.shootCloseTarmac().withTimeout(1),
+				new ParallelDeadlineGroup(
+						drivetrain.followTrajectory(trajectories.get(1)),
+						new IntakeWithMagazine(intake, magazine)),
+				new LimelightAim(drivetrain, limelight).withTimeout(0.5),
+				shooter.shootCloseTarmac().withTimeout(1),
+				new ParallelDeadlineGroup(
+						new SequentialCommandGroup(
+								drivetrain.followTrajectory(trajectories.get(2)),
+								new WaitForFullMagazine(magazine).withTimeout(3)),
+						new IntakeWithMagazine(intake, magazine)),
+				drivetrain.followTrajectory(trajectories.get(3)),
+				new LimelightAim(drivetrain, limelight).withTimeout(0.5),
+				shooter.shootCloseTarmac().withTimeout(1),
+				shooter.shootCloseTarmac().withTimeout(1));
+	}
 
 }

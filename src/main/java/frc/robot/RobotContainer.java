@@ -45,6 +45,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -76,6 +77,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureAutonomous();
     configureButtonBindings();
+    // PathPlannerServer.startServer(5811);
   }
 
   public Drivetrain getDrivetrain() {

@@ -77,7 +77,8 @@ public class Turret extends SubsystemBase {
         angle = 0;
       }
     }
-    currentAngle = ((trueMod(angle + leftAngle, 360) - leftAngle) / 360) * Constants.Turret.ENCODER_TICKS_PER_ROTATION
+    currentAngle = Math.min(260, Math.max(-80, (trueMod(angle + leftAngle, 360) - leftAngle) / 360))
+        * Constants.Turret.ENCODER_TICKS_PER_ROTATION
         * Constants.Turret.GEAR_RATIO;
   }
 
