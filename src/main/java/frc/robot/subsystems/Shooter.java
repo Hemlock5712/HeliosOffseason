@@ -9,11 +9,11 @@ import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -104,7 +104,7 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
   }
 
   public Command shootCloseTarmac() {
-    return new ManualShoot(this, magazine, () -> 6700, () -> -5);
+    return new ManualShoot(this, magazine, () -> 6550, () -> -5);
   }
 
   public Command shootFarTarmac() {
