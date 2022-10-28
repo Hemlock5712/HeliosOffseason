@@ -1,5 +1,7 @@
 package frc.robot.commands.autonomous;
 
+import com.pathplanner.lib.PathConstraints;
+
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.commands.IntakeWithMagazine;
 import frc.robot.commands.LimelightAim;
@@ -13,11 +15,12 @@ import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
-public class WackTwoBallTwoSteal extends AutoBaseCommandPPBeta {
+public class MiddleOneBallOneSteal extends AutoBaseCommandPPBeta {
 
-    public WackTwoBallTwoSteal(String pathName, Drivetrain drivetrain, Shooter shooter, Intake intake,
-            Magazine magazine, Climber climber, Turret turret, Limelight limelight) {
-        super(pathName, drivetrain, shooter, intake, magazine, climber, turret, limelight);
+    public MiddleOneBallOneSteal(String pathName, Drivetrain drivetrain, Shooter shooter, Intake intake,
+            Magazine magazine, Climber climber, Turret turret, Limelight limelight, PathConstraints constraint,
+            PathConstraints... constraints) {
+        super(pathName, drivetrain, shooter, intake, magazine, climber, turret, limelight, constraint, constraints);
 
         addCommands(
                 new ParallelDeadlineGroup(
@@ -25,14 +28,9 @@ public class WackTwoBallTwoSteal extends AutoBaseCommandPPBeta {
                         new IntakeWithMagazine(intake, magazine)),
                 new LimelightAim(drivetrain, limelight).withTimeout(0.5),
                 shooter.shootFarTarmac().withTimeout(1),
-                shooter.shootFarTarmac().withTimeout(1),
-                new ParallelDeadlineGroup(
-                        drivetrain.followTrajectory(trajectories.get(1)),
-                        new IntakeWithMagazine(intake, magazine)),
-                drivetrain.followTrajectory(trajectories.get(2)),
-                // shooter.shootCloseTarmac(),
+                drivetrain.followTrajectory(trajectories.get(1)),
                 new MagazineSpitCargo(magazine).withTimeout(2),
-                drivetrain.followTrajectory(trajectories.get(3)));
+                drivetrain.followTrajectory(trajectories.get(2)));
     }
 
 }

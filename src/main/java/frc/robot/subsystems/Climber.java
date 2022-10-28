@@ -89,12 +89,14 @@ public class Climber extends PIDSubsystem implements AutoCloseable {
   @Override
   public void periodic() {
     // if(isCalibrated) {
-    //   getController().setSetpoint(getSetpoint());
-    //   useOutput(getController().calculate(getMeasurement()), getSetpoint());
+    // getController().setSetpoint(getSetpoint());
+    // useOutput(getController().calculate(getMeasurement()), getSetpoint());
     // }
     SmartDashboard.putData(this);
     SmartDashboard.putBoolean("Climber/ArmsOut", armsOut);
     SmartDashboard.putNumber("Climber/CurrentPosition", getMeasurement());
+    SmartDashboard.putBoolean("Climber/ArmsUp", getLimitSwitchUp());
+    SmartDashboard.putBoolean("Climber/ArmsDown", getLimitSwitchDown());
   }
 
   @Override

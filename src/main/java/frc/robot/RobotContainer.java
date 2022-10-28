@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -28,6 +30,7 @@ import frc.robot.commands.TurretPassiveAim;
 import frc.robot.commands.autonomous.BackShootMiddle;
 import frc.robot.commands.autonomous.FiveBallBeta;
 import frc.robot.commands.autonomous.FourBallLeft;
+import frc.robot.commands.autonomous.MiddleOneBallOneSteal;
 import frc.robot.commands.autonomous.OneBallOneStealLeft;
 import frc.robot.commands.autonomous.SystemCheck;
 import frc.robot.commands.autonomous.WackTwoBallTwoSteal;
@@ -111,6 +114,8 @@ public class RobotContainer {
         new BackShootMiddle("Back Shoot Middle", drivetrain, shooter, intake, magazine, climber, turret, limelight));
     m_chooser.addOption("Wack 2 Ball 2 Steal", new WackTwoBallTwoSteal("Wack 2 Ball 2 Steal", drivetrain, shooter,
         intake, magazine, climber, turret, limelight));
+    m_chooser.addOption("1 Ball 1 Steal Middle", new MiddleOneBallOneSteal("Middle 1 Ball 1 Steal", drivetrain, shooter,
+        intake, magazine, climber, turret, limelight, new PathConstraints(1.5, 1)));
     SmartDashboard.putData(m_chooser);
   }
 
@@ -192,10 +197,6 @@ public class RobotContainer {
     new Button(climber_joystick::getYButton).whileHeld(new ClimberUp(climber))
         .whenReleased(new InstantCommand(() -> climber.runLift(0)));
 
-    // Drop climber to bottom
-    // new Button(climber_joystick::getAButton).whenPressed(
-    // new ClimberToBottom(climber)).whenReleased(new
-    // ClimberToBottomOffBar(climber));
     new Button(climber_joystick::getAButton).whileHeld(new ClimberDown(climber))
         .whenReleased(new InstantCommand(() -> climber.runLift(0)));
 

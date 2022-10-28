@@ -86,8 +86,8 @@ public final class Constants {
     public static final class Turret {
         public static final int MOTOR_ID = 22;
 
-        public static final double kP = 0.016;
-        public static final double kI = 0.00005;
+        public static final double kP = 0.014;
+        public static final double kI = 0.00004;
         public static final double kD = 0.006;
         public static final double kF = 0.000;
 

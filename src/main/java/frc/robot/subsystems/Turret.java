@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Turret extends SubsystemBase {
+public class Turret extends SubsystemBase implements AutoCloseable {
 
   Climber climber;
   Drivetrain drivetrain;
-  TalonFX rotationMotor = new TalonFX(Constants.Turret.MOTOR_ID);
+  public TalonFX rotationMotor = new TalonFX(Constants.Turret.MOTOR_ID);
   double currentAngle = 0;
   boolean activeTargeting = false;
   boolean limelightTargeting = false;
@@ -177,5 +177,10 @@ public class Turret extends SubsystemBase {
     SmartDashboard.putBoolean("Turret/isFront", isFront());
     SmartDashboard.putBoolean("Turret/limelightTargeting", limelightTargeting);
     SmartDashboard.putBoolean("Turret/hallEffect", isMagnetTriggered());
+  }
+
+  @Override
+  public void close() throws Exception {
+    rotationMotor.DestroyObject();
   }
 }
