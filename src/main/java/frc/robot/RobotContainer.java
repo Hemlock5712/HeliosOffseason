@@ -6,8 +6,6 @@ package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.CalibrateClimber;
 import frc.robot.commands.ClimberArmsIn;
 import frc.robot.commands.ClimberArmsOut;
@@ -168,12 +167,23 @@ public class RobotContainer {
     new Button(primary_joystick::getLeftBumper).whileHeld(
         new MagazineSpitCargo(magazine));
 
-    new Button(primary_joystick::getStartButton).whenPressed(new InstantCommand(() -> {
-      drivetrain.resetOdometry(new Pose2d(.5, 4.5, Rotation2d.fromDegrees(0)));
-    }));
-
     new Button(primary_joystick::getBackButton).whenPressed(new InstantCommand(() -> {
     }));
+
+    new POVButton(primary_joystick, 90).whenPressed(new InstantCommand(() -> {
+      turret.rawTurretOutput(.5);
+    })).whenReleased(new InstantCommand(() -> {
+      turret.rawTurretOutput(0);
+    }));
+    new POVButton(primary_joystick, 270).whenPressed(new InstantCommand(() -> {
+      turret.rawTurretOutput(-.5);
+    })).whenReleased(new InstantCommand(() -> {
+      turret.rawTurretOutput(0);
+    }));
+
+    new Button(primary_joystick::getStartButton).whenPressed(() -> {
+      turret.playSong("battle.chrp");
+    });
 
     /*
      * Operator Commands

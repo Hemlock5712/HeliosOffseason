@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -167,10 +170,22 @@ public class Turret extends SubsystemBase implements AutoCloseable {
     this.haveArmsGoneDownBefore = haveArmsGoneDownBefore;
   }
 
+  public void rawTurretOutput(double output) {
+    rotationMotor.set(TalonFXControlMode.PercentOutput, output);
+  }
+
+  public void playSong(String name) {
+    ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+    motors.add(rotationMotor);
+    Orchestra o = new Orchestra(motors);
+    o.loadMusic(name);
+    o.play();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    rotationMotor.set(TalonFXControlMode.Position, currentAngle);
+    // rotationMotor.set(TalonFXControlMode.Position, currentAngle);
     SmartDashboard.putNumber("Turret/targetAngle", getTargetAngle());
     SmartDashboard.putNumber("Turret/currentAngle", getTrueTurretAngle());
     SmartDashboard.putBoolean("Turret/isBack", isBack());
