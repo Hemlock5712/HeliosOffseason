@@ -104,11 +104,11 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
   }
 
   public Command shootCloseTarmac() {
-    return new ManualShoot(this, magazine, () -> 6550, () -> -5);
+    return new ManualShoot(this, magazine, () -> 6400, () -> -5);
   }
 
   public Command shootFarTarmac() {
-    return new ManualShoot(this, magazine, () -> 7000, () -> -7);
+    return new ManualShoot(this, magazine, () -> 6900, () -> -7);
   }
 
   public Command shootCloseSafeZone() {

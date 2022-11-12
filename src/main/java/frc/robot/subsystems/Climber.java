@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +22,7 @@ public class Climber extends PIDSubsystem implements AutoCloseable {
   public TalonFX rightMotor = new TalonFX(Constants.Climber.RIGHT_MOTOR_ID);
 
   Solenoid climberSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.Climber.SOLENOID_ID);
+  PneumaticHub AirPressure = new PneumaticHub();
 
   boolean isCalibrated = false;
   boolean armsOut = false;
@@ -82,6 +84,10 @@ public class Climber extends PIDSubsystem implements AutoCloseable {
     slowMode = isSlow;
   }
 
+  public double getPSI() {
+    return AirPressure.getPressure(0);
+  }
+
   public boolean isSlow() {
     return slowMode;
   }
@@ -95,6 +101,7 @@ public class Climber extends PIDSubsystem implements AutoCloseable {
     SmartDashboard.putData(this);
     SmartDashboard.putBoolean("Climber/ArmsOut", armsOut);
     SmartDashboard.putNumber("Climber/CurrentPosition", getMeasurement());
+    SmartDashboard.putNumber("Climber/PSI", getPSI());
     SmartDashboard.putBoolean("Climber/ArmsUp", getLimitSwitchUp());
     SmartDashboard.putBoolean("Climber/ArmsDown", getLimitSwitchDown());
   }
