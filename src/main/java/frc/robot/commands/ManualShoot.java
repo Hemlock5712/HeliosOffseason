@@ -6,16 +6,17 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.util.RawShooterInput;
 import frc.robot.commands.wait.WaitForCargoInUpperMagazine;
+import frc.robot.commands.wait.WaitForHoodAngle;
 import frc.robot.commands.wait.WaitForShooterSpeed;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 
-//, double shootOverride
 public class ManualShoot extends ParallelRaceGroup {
 
   public ManualShoot(Shooter shooter, Magazine magazine, DoubleSupplier speed, DoubleSupplier angle) {
@@ -25,7 +26,9 @@ public class ManualShoot extends ParallelRaceGroup {
             new ParallelRaceGroup(
                 new SequentialCommandGroup(
                     new WaitCommand(0.3),
-                    new WaitForShooterSpeed(shooter).withTimeout(1),
+                    new ParallelCommandGroup(
+                        new WaitForShooterSpeed(shooter).withTimeout(1),
+                        new WaitForHoodAngle(shooter)),
                     new WaitForCargoInUpperMagazine(magazine)),
                 new MagazineAutoBump(magazine)),
             new FeedShooter(magazine).alongWith(new WaitCommand(0.25))));

@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -96,7 +99,7 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
   }
 
   public boolean isHoodAtAngle() {
-    return Math.abs(hoodEncoder.getPosition() - hoodAngleTarget) < 0.2;
+    return Math.abs(hoodEncoder.getPosition() - hoodAngleTarget) < 0.5;
   }
 
   public void zeroHoodEncoder() {
@@ -123,6 +126,27 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     return new ManualShoot(this, magazine, () -> 3000, () -> -5);
   }
 
+  public Command shootDemoShot() {
+    return new ManualShoot(this, magazine, () -> 6500, () -> -7).withTimeout(2);
+  }
+
+  public Command shootDemoShotLowHood() {
+    return new ManualShoot(this, magazine, () -> 6500, () -> -60).withTimeout(2);
+  }
+
+  public Command SHOOT() {
+    return new ManualShoot(this, magazine, () -> 14000, () -> -60).withTimeout(5);
+  }
+
+  public void playSong(String name) {
+    ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+    motors.add(leftShooter);
+    motors.add(rightShooter);
+    Orchestra o = new Orchestra(motors);
+    o.loadMusic(name);
+    o.play();
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shooter/HoodAngle", getHoodPosition());
@@ -131,6 +155,7 @@ public class Shooter extends SubsystemBase implements AutoCloseable {
     SmartDashboard.putNumber("Shooter/HoodSpeed", hood.get());
     SmartDashboard.putBoolean("Shooter/HoodAtAngle", isHoodAtAngle());
     SmartDashboard.putBoolean("Shooter/FlywheelAtSpeed", Math.abs(getShooterError()) < 200);
+    SmartDashboard.putNumber("Shooter/HoodError", hoodEncoder.getPosition() - hoodAngleTarget);
     SmartDashboard.putData(this);
   }
 

@@ -20,12 +20,11 @@ import frc.robot.commands.ClimberArmsOut;
 import frc.robot.commands.ClimberDown;
 import frc.robot.commands.ClimberUp;
 import frc.robot.commands.FieldDrive;
-import frc.robot.commands.IntakeCargo;
-import frc.robot.commands.LimelightAim;
-import frc.robot.commands.MagazineAutoBump;
+import frc.robot.commands.IntakeWithMagazine;
 import frc.robot.commands.MagazineSpitCargo;
+import frc.robot.commands.MagazineStop;
+import frc.robot.commands.ManualShoot;
 import frc.robot.commands.ResetHoodAngle;
-import frc.robot.commands.TurretPassiveAim;
 import frc.robot.commands.autonomous.BackShootMiddle;
 import frc.robot.commands.autonomous.FiveBallBeta;
 import frc.robot.commands.autonomous.FourBallLeft;
@@ -132,19 +131,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // primary_joystick = new XboxController(0);
     XboxController operator_joystick = new XboxController(1);
     XboxController climber_joystick = new XboxController(2);
-    // XboxController climber_joystick = new XboxController(2);
 
     // Default commands
-    magazine.setDefaultCommand(new MagazineAutoBump(magazine));
-    // rumble.setDefaultCommand(new MagazineAutoBumpRumble(primary_joystick, rumble,
-    // magazine));
+    // magazine.setDefaultCommand(new MagazineAutoBump(magazine));
+    magazine.setDefaultCommand(new MagazineStop(magazine));
     drivetrain.setDefaultCommand(new FieldDrive(drivetrain, () -> -modifyAxis(primary_joystick.getLeftX()),
         () -> modifyAxis(primary_joystick.getLeftY()), () -> modifyAxis(primary_joystick.getRightX())));
     shooter.setDefaultCommand(new ResetHoodAngle(shooter));
-    turret.setDefaultCommand(new TurretPassiveAim(turret, limelight, drivetrain));
+    // turret.setDefaultCommand(new TurretPassiveAim(turret, limelight,
+    // drivetrain));
 
     /*
      * Primary Driver Commands
@@ -155,14 +152,11 @@ public class RobotContainer {
 
     // Intake
     new Button(primary_joystick::getRightBumper).whenHeld(
-        new IntakeCargo(intake, magazine));
+        new IntakeWithMagazine(intake, magazine));
 
     // Reverse intake
     new Button(primary_joystick::getXButton).whenHeld(
         new MagazineSpitCargo(magazine));
-
-    new Button(primary_joystick::getYButton).whenHeld(
-        new LimelightAim(drivetrain, limelight));
 
     new Button(primary_joystick::getLeftBumper).whileHeld(
         new MagazineSpitCargo(magazine));
@@ -182,8 +176,17 @@ public class RobotContainer {
     }));
 
     new Button(primary_joystick::getStartButton).whenPressed(() -> {
-      turret.playSong("battle.chrp");
+      shooter.playSong("battle.chrp");
     });
+    /*
+     * Demo commands
+     */
+    new Button(primary_joystick::getBButton).whenPressed(shooter.shootDemoShot())
+        .whenReleased(new ManualShoot(shooter, magazine, () -> 0, () -> 0));
+    new Button(primary_joystick::getYButton).whenPressed(shooter.shootDemoShotLowHood())
+        .whenReleased(new ManualShoot(shooter, magazine, () -> 0, () -> 0));
+    new Button(primary_joystick::getBackButton).whenPressed(shooter.SHOOT())
+        .whenReleased(new ManualShoot(shooter, magazine, () -> 0, () -> 0));
 
     /*
      * Operator Commands
